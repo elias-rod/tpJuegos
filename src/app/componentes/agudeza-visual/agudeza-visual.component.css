@@ -1,0 +1,22 @@
+.opcion {
+    border-radius: 10px;
+    border: 5px solid black;
+    padding: 5px;
+    font-size:200%;
+    font-weight: bold;
+    color: black;
+}
+
+.solucion {
+    border-radius: 10px;
+    border: 5px solid white;
+    padding: 5px;
+    font-size:200%;
+    color: white;
+    font-weight: bold;
+}
+
+img {
+    height: 128px;
+    width: 128px;
+}

@@ -1,0 +1,29 @@
+<app-modal [parametrosModal]="argumentosModal" (clickBotonPrimario)="accionModal($event)"></app-modal>
+  
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-default transparent">
+                <div class="panel-heading text-center">
+                    <h1>{{miAgilidad.jugador}}, calcula rápido!</h1>
+                </div>
+                <div class="panel-body">
+                    <h1>{{miAgilidad.operando1}} {{miAgilidad.operador}} {{miAgilidad.operando2}} = ?</h1>
+                    <form [formGroup]="agilidadForm" class="form-group">
+                        <div class="input-group">
+                            <input type="text" pattern="-?[0-9]*" id="respuestaInput" formControlName="respuesta" class="form-control" placeholder="Ingresa el resultado" autofocus>
+                            <span class="input-group-btn">
+                                <button type="submit" (click)="verificar()" *ngIf="agilidadForm.valid" data-toggle="modal" data-target="#modal" data-keyboard="false" data-backdrop="static" class="btn btn-success animated bounceInRight">Verificar</button>
+                            </span>
+                        </div>
+                    </form>
+                    <div class="progress">
+                        <div [ngClass]="['progress-bar', 'progress-bar-striped', 'active', colorBarra]" role="progressbar" aria-valuemin="0" aria-valuemax="100" [style.width]="progresoBarra + '%'">
+                          {{miAgilidad.segundosRestantes}} segundos
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

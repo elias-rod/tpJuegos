@@ -1,0 +1,29 @@
+<nav class="navbar navbar-inverse transparent">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+            </button>
+            <a data-toggle="tooltip" title="Inicio" class="navbar-brand" routerLink="/inicial"><span class="glyphicon glyphicon-home"></span></a>
+        </div>
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Juegos <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a routerLink="/adivina">Adivina el número</a></li>
+                        <li><a routerLink="/agilidad">Agilidad aritmética</a></li>
+                        <li><a routerLink="/agudeza">Agudeza visual</a></li>
+                        <li><a routerLink="/ppot">Piedra, papel o tijera</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a routerLink="/listados">Listados</a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a routerLink="/login"><span class="glyphicon glyphicon-log-in"></span> Ingresar</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>

@@ -1,0 +1,23 @@
+<app-modal [parametrosModal]="argumentosModal" (clickBotonPrimario)="accionModal($event)" *ngIf="argumentosModal"></app-modal>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-default transparent">
+                <div class="panel-heading text-center">
+                    <h1>{{miAdivina.jugador}}, adivina el numero del 0 al 99!</h1>
+                </div>
+                <div class="panel-body">
+                    <form [formGroup]="adivinaForm" class="form-group">
+                        <div class="input-group">
+                            <input type="text" pattern="[0-9]*" id="respuestaInput" formControlName="respuesta" class="form-control" placeholder="Ingresa aquí tu intento" autofocus>
+                            <span class="input-group-btn">
+                                <button type="submit" (click)="verificar()" *ngIf="adivinaForm.valid" data-toggle="modal" data-target="#modal" data-backdrop="static" data-keyboard="false" class="btn btn-success animated bounceInRight">Verificar</button>
+                            </span>
+                        </div>
+                    </form>
+                </div>
+            </div>            
+        </div>
+    </div>
+</div>
