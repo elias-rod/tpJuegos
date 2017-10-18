@@ -11,16 +11,14 @@ declare var $: any;
 })
 export class AgilidadAritmeticaComponent implements OnInit {
 
-  miAgilidad: AgilidadAritmetica;
+  juego: AgilidadAritmetica;
   agilidadForm: FormGroup;
   argumentosModal: object;
   progresoBarra: number;
   colorBarra: string;
   minutero;
   constructor(private formBuilder:FormBuilder) {
-    this.miAgilidad = new AgilidadAritmetica('Elias');
-    this.miAgilidad.generarSolucion();
-    this.iniciarCuentaRegresiva();
+    this.generarNuevo();
     this.agilidadForm = this.formBuilder.group({
       'respuesta': [null, Validators.compose([Validators.required, Validators.maxLength(4)])]
     });
@@ -31,18 +29,18 @@ export class AgilidadAritmeticaComponent implements OnInit {
   }
 
   iniciarCuentaRegresiva() {
-    this.miAgilidad.segundosRestantes = this.miAgilidad.segundosMax + 1;
+    this.juego.segundosRestantes = this.juego.segundosMax + 1;
     this.minutero = setInterval(
       () => {
-        if(this.miAgilidad.segundosRestantes == 0) {
+        if(this.juego.segundosRestantes == 0) {
           this.verificar();
           $("#modal").modal("show");
           return;
         }
         else {
-          this.miAgilidad.segundosRestantes--;
+          this.juego.segundosRestantes--;
         }
-        this.progresoBarra = Math.floor(100 * (this.miAgilidad.segundosRestantes / this.miAgilidad.segundosMax));
+        this.progresoBarra = Math.floor(100 * (this.juego.segundosRestantes / this.juego.segundosMax));
         if (this.progresoBarra > 66) {
           this.colorBarra = 'progress-bar-success';
         }
@@ -57,33 +55,33 @@ export class AgilidadAritmeticaComponent implements OnInit {
   }
   
   generarNuevo() {
-    this.miAgilidad = new AgilidadAritmetica('Pedro');
-    this.miAgilidad.generarSolucion();
+    this.juego = new AgilidadAritmetica('Pedro');
+    this.juego.generarSolucion();
     this.resetearFormulario();
     this.iniciarCuentaRegresiva();
   }
 
   verificar() {
     clearInterval(this.minutero);
-    this.miAgilidad.respuesta = this.agilidadForm.value.respuesta;
-    let intento = this.miAgilidad.verificar();
-    if (this.miAgilidad.gano) {
+    this.juego.respuesta = this.agilidadForm.value.respuesta;
+    let intento = this.juego.verificar();
+    if (this.juego.gano) {
       this.argumentosModal = {
         tipo: 'gano',
         imagenPath: './assets/gano.png',
         titulo: 'Ganaste!',
-        subtitulo: 'Felicitaciones hiciste 3 aciertos en ' + (6 - (this.miAgilidad.aciertosRestantes + this.miAgilidad.erroresRestantes)) + ' intentos',
+        subtitulo: 'Felicitaciones hiciste 3 aciertos en ' + (6 - (this.juego.aciertosRestantes + this.juego.erroresRestantes)) + ' intentos',
         parrafo: 'Tu logro quedó registrado ¿Jugamos otra vez?',
         textoBotonSecundario: 'Jugar otros juegos',
         textoBotonPrimario: 'Nueva partida'
       }
     }
-    else if (this.miAgilidad.erroresRestantes == 0) {
+    else if (this.juego.erroresRestantes == 0) {
       this.argumentosModal = {
         tipo: 'perdio',
         imagenPath: './assets/perdio.png',
         titulo: 'Perdiste!',
-        subtitulo: 'Es que cometiste 3 errores de 5 intentos posibles. La respuesta correcta era: ' + this.miAgilidad.solucion,
+        subtitulo: 'Es que cometiste 3 errores de 5 intentos posibles. La respuesta correcta era: ' + this.juego.solucion,
         parrafo: '¿Qué tal si intentas una nueva partida?',
         textoBotonSecundario: 'Jugar otros juegos',
         textoBotonPrimario: 'Nueva partida'
@@ -95,7 +93,7 @@ export class AgilidadAritmeticaComponent implements OnInit {
         imagenPath: './assets/acerto.png',
         titulo: 'Acertaste!',
         subtitulo: 'Muy bien...',
-        parrafo: 'Necesitas acertar ' + this.miAgilidad.aciertosRestantes + ' más y como máximo podes errar ' + this.miAgilidad.erroresRestantes + ' más',
+        parrafo: 'Necesitas acertar ' + this.juego.aciertosRestantes + ' más y como máximo podes errar ' + this.juego.erroresRestantes + ' más',
         textoBotonSecundario: 'Jugar otros juegos',
         textoBotonPrimario: 'Continuar'
       }
@@ -105,8 +103,8 @@ export class AgilidadAritmeticaComponent implements OnInit {
         tipo: 'continua',
         imagenPath: './assets/erro.png',
         titulo: 'Erraste!',
-        subtitulo: 'La respuesta correcta era: ' + this.miAgilidad.solucion,
-        parrafo: 'Necesitas acertar ' + this.miAgilidad.aciertosRestantes + ' más y como máximo podes errar ' + this.miAgilidad.erroresRestantes + ' más',
+        subtitulo: 'La respuesta correcta era: ' + this.juego.solucion,
+        parrafo: 'Necesitas acertar ' + this.juego.aciertosRestantes + ' más y como máximo podes errar ' + this.juego.erroresRestantes + ' más',
         textoBotonSecundario: 'Jugar otros juegos',
         textoBotonPrimario: 'Continuar'
       }
@@ -115,7 +113,7 @@ export class AgilidadAritmeticaComponent implements OnInit {
 
   accionModal(tipo){
     if (tipo === 'continua') {
-      this.miAgilidad.generarSolucion();
+      this.juego.generarSolucion();
       this.resetearFormulario();
       this.iniciarCuentaRegresiva();
     }

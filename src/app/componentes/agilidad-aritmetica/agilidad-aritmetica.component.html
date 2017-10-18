@@ -5,10 +5,10 @@
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default transparent">
                 <div class="panel-heading text-center">
-                    <h1>{{miAgilidad.jugador}}, calcula rápido!</h1>
+                    <h1>{{juego.jugador}}, calcula rápido!</h1>
                 </div>
                 <div class="panel-body">
-                    <h1>{{miAgilidad.operando1}} {{miAgilidad.operador}} {{miAgilidad.operando2}} = ?</h1>
+                    <h1>{{juego.operando1}} {{juego.operador}} {{juego.operando2}} = ?</h1>
                     <form [formGroup]="agilidadForm" class="form-group">
                         <div class="input-group">
                             <input type="text" pattern="-?[0-9]*" id="respuestaInput" formControlName="respuesta" class="form-control" placeholder="Ingresa el resultado" autofocus>
@@ -19,7 +19,7 @@
                     </form>
                     <div class="progress">
                         <div [ngClass]="['progress-bar', 'progress-bar-striped', 'active', colorBarra]" role="progressbar" aria-valuemin="0" aria-valuemax="100" [style.width]="progresoBarra + '%'">
-                          {{miAgilidad.segundosRestantes}} segundos
+                          {{juego.segundosRestantes}} segundos
                         </div>
                     </div>
                 </div>

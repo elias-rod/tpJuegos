@@ -3,18 +3,18 @@
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default transparent">
                 <div class="panel-heading text-center">
-                    <h1>{{miAgudeza.jugador}}, elige la opción correcta</h1>
+                    <h1>{{juego.jugador}}, elige la opción correcta</h1>
                 </div>
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-md-4" align="center">
-                            <button (click)="verificar(0)" id="opcion1" class="opcion animated" [ngClass]="claseDinamicaOpciones" [ngStyle]="{'backgroundColor' : miAgudeza.color[0]}" [disabled]="mostrarMensajeResultado">OPCIÓN 1</button>
+                            <button (click)="verificar(0)" id="opcion1" class="opcion animated" [ngClass]="claseDinamicaOpciones" [ngStyle]="{'backgroundColor' : juego.color[0]}" [disabled]="mostrarMensajeResultado">OPCIÓN 1</button>
                         </div>
                         <div class="col-md-4" align="center">
-                            <button (click)="verificar(1)" id="opcion2" class="opcion animated" [ngClass]="claseDinamicaOpciones" [ngStyle]="{'backgroundColor' : miAgudeza.color[1]}" [disabled]="mostrarMensajeResultado">OPCIÓN 2</button>            
+                            <button (click)="verificar(1)" id="opcion2" class="opcion animated" [ngClass]="claseDinamicaOpciones" [ngStyle]="{'backgroundColor' : juego.color[1]}" [disabled]="mostrarMensajeResultado">OPCIÓN 2</button>            
                         </div>
                         <div class="col-md-4" align="center">
-                            <button (click)="verificar(2)" id="opcion3" class="opcion animated" [ngClass]="claseDinamicaOpciones" [ngStyle]="{'backgroundColor' : miAgudeza.color[2]}" [disabled]="mostrarMensajeResultado">OPCIÓN 3</button>
+                            <button (click)="verificar(2)" id="opcion3" class="opcion animated" [ngClass]="claseDinamicaOpciones" [ngStyle]="{'backgroundColor' : juego.color[2]}" [disabled]="mostrarMensajeResultado">OPCIÓN 3</button>
                         </div>
                     </div>
                     <br>
@@ -22,7 +22,7 @@
                     <br>
                     <div class="row">
                         <div class="col-md-4 col-md-offset-4" align="center">
-                            <p id="solucion" class="solucion animated" [ngStyle]="{'backgroundColor' : miAgudeza.color[3]}">SOLUCIÓN</p>
+                            <p id="solucion" class="solucion animated" [ngStyle]="{'backgroundColor' : juego.color[3]}">SOLUCIÓN</p>
                         </div>
                     </div>
                     <div class="alert" [ngClass]="mensajeResultado?.bootstrapClass" *ngIf="mostrarMensajeResultado">

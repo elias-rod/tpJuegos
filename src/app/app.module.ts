@@ -19,6 +19,7 @@ import { RegistroComponent } from './componentes/registro/registro.component';
 import { JuegosComponent } from './componentes/juegos/juegos.component';
 import { ModalComponent } from './componentes/modal/modal.component';
 import { PpotComponent } from './componentes/ppot/ppot.component';
+import { AnagramaComponent } from './componentes/anagrama/anagrama.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import { PpotComponent } from './componentes/ppot/ppot.component';
     RegistroComponent,
     JuegosComponent,
     ModalComponent,
-    PpotComponent
+    PpotComponent,
+    AnagramaComponent
   ],
   imports: [
     BrowserModule,

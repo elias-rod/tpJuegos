@@ -8,6 +8,7 @@ import { ErrorComponent } from '../componentes/error/error.component';
 import { AdivinaNumeroComponent } from '../componentes/adivina-numero/adivina-numero.component';
 import { AgilidadAritmeticaComponent } from '../componentes/agilidad-aritmetica/agilidad-aritmetica.component';
 import { AgudezaVisualComponent } from '../componentes/agudeza-visual/agudeza-visual.component';
+import { AnagramaComponent } from '../componentes/anagrama/anagrama.component';
 import { PpotComponent } from '../componentes/ppot/ppot.component';
 import { ListadoComponent } from'../componentes/listado/listado.component';
 import { ListadoResultadosComponent } from '../componentes/listado-resultados/listado-resultados.component';
@@ -22,6 +23,7 @@ const MiRuteo = [
   {path: 'adivina' , component: AdivinaNumeroComponent},
   {path: 'agilidad' , component: AgilidadAritmeticaComponent},
   {path: 'agudeza' , component: AgudezaVisualComponent},
+  {path: 'anagrama' , component: AnagramaComponent},
   {path: 'ppot' , component: PpotComponent},
   {path: 'listados' , component: ListadoComponent},
   {path: 'inicial' , component: InicialComponent},
