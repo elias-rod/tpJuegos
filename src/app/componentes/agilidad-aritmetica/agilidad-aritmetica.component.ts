@@ -18,10 +18,10 @@ export class AgilidadAritmeticaComponent implements OnInit {
   colorBarra: string;
   minutero;
   constructor(private formBuilder:FormBuilder) {
-    this.generarNuevo();
     this.agilidadForm = this.formBuilder.group({
       'respuesta': [null, Validators.compose([Validators.required, Validators.maxLength(4)])]
     });
+    this.generarNuevo();
     this.colorBarra = '';
   }
 
@@ -93,7 +93,7 @@ export class AgilidadAritmeticaComponent implements OnInit {
         imagenPath: './assets/acerto.png',
         titulo: 'Acertaste!',
         subtitulo: 'Muy bien...',
-        parrafo: 'Necesitas acertar ' + this.juego.aciertosRestantes + ' más y como máximo podes errar ' + this.juego.erroresRestantes + ' más',
+        parrafo: 'Necesitas acertar ' + this.juego.aciertosRestantes + ' más para ganar y si errás ' + this.juego.erroresRestantes + ' más, perdés',
         textoBotonSecundario: 'Jugar otros juegos',
         textoBotonPrimario: 'Continuar'
       }
@@ -104,7 +104,7 @@ export class AgilidadAritmeticaComponent implements OnInit {
         imagenPath: './assets/erro.png',
         titulo: 'Erraste!',
         subtitulo: 'La respuesta correcta era: ' + this.juego.solucion,
-        parrafo: 'Necesitas acertar ' + this.juego.aciertosRestantes + ' más y como máximo podes errar ' + this.juego.erroresRestantes + ' más',
+        parrafo: 'Necesitas acertar ' + this.juego.aciertosRestantes + ' más para ganar y si errás ' + this.juego.erroresRestantes + ' más, perdés',
         textoBotonSecundario: 'Jugar otros juegos',
         textoBotonPrimario: 'Continuar'
       }

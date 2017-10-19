@@ -3,17 +3,17 @@
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default transparent">
                 <div class="panel-heading text-center">
-                    <h1>{{juego.jugador}}, la computadora ya eligió, ahora clickea en la piedra, el papel o la tijera justo en el momento exacto!</h1>
+                    <h1>{{juego.jugador}}, clickea en el momento exacto!</h1>
                 </div>
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-md-6" align="center">
-                            <h3>Computadora</h3>
-                            <img [src]="imagenIA">
+                            <h3>Inteligencia artificial</h3>
+                            <img id="manoIA" [src]="pathImagenIA">
                         </div>
                         <div class="col-md-6" align="center">
                             <h3>Vos</h3>
-                            <button (click)="verificar(1)" id="opcion2" class="opcion animated" [ngClass]="claseDinamicaOpciones" [ngStyle]="{'backgroundColor' : miAgudeza.color[1]}" [disabled]="mostrarMensajeResultado">OPCIÓN 2</button>            
+                            <input type="image" id="imagenJugador" [disabled]="mostrarMensajeResultado" class="img-responsive" (click)="verificar(index);">
                         </div>
                     </div>
                     <div class="alert" [ngClass]="mensajeResultado?.bootstrapClass" *ngIf="mostrarMensajeResultado">

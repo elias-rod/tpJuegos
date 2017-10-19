@@ -1,20 +1,20 @@
 import { Juego } from './juego';
 
-export class Ppot extends Juego {
-    aciertosRestantes: number;
+export class Anagrama extends Juego {
     erroresRestantes: number;
+    palabras: Array<string>;
 
     constructor(jugador: string) {
         super(jugador);
-        this.nombre = 'Piedra, papel o tijera';
-        this.aciertosRestantes = 3;//para ganar
+        this.nombre = 'Anagrama';
         this.erroresRestantes = 3;//para perder
+        this.palabras = [];
     }
 
     generarSolucion(){
         this.solucion = Math.floor(Math.random() * 3);
     }
-
+/*
     verificar(){
         console.log('Solución: ' + this.solucion + 1);
         //SI HAY EMPATE
@@ -36,5 +36,5 @@ export class Ppot extends Juego {
             this.erroresRestantes--;
             return 'erro';
         }
-    }
+    }*/
 }

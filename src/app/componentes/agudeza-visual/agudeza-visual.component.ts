@@ -14,7 +14,8 @@ export class AgudezaVisualComponent implements OnInit {
   mostrarMensajeResultado: boolean;
 
   constructor() {
-    this.generarNuevo();
+    this.juego = new AgudezaVisual('Elias');
+    this.juego.generarSolucion();
   }
 
   ngOnInit() {
@@ -95,7 +96,7 @@ export class AgudezaVisualComponent implements OnInit {
         imagenPath: './assets/acerto.png',
         titulo: 'Acertaste!',
         subtitulo: 'Muy bien...',
-        parrafo: 'Necesitas acertar ' + this.juego.aciertosRestantes + ' más y como máximo podes errar ' + this.juego.erroresRestantes + ' más',
+        parrafo: 'Necesitas acertar ' + this.juego.aciertosRestantes + ' más para ganar y si errás ' + this.juego.erroresRestantes + ' más, perdés',
         textoBotonSecundario: 'Jugar otros juegos',
         textoBotonPrimario: 'Continuar'
       }
@@ -107,7 +108,7 @@ export class AgudezaVisualComponent implements OnInit {
         imagenPath: './assets/erro.png',
         titulo: 'Erraste!',
         subtitulo: 'La opción correcta era la ' + (this.juego.solucion + 1),
-        parrafo: 'Necesitas acertar ' + this.juego.aciertosRestantes + ' más y como máximo podes errar ' + this.juego.erroresRestantes + ' más',
+        parrafo: 'Necesitas acertar ' + this.juego.aciertosRestantes + ' más para ganar y si errás ' + this.juego.erroresRestantes + ' más, perdés',
         textoBotonSecundario: 'Jugar otros juegos',
         textoBotonPrimario: 'Continuar'
       }

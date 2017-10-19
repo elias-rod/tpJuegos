@@ -13,10 +13,10 @@ export class AdivinaNumeroComponent implements OnInit {
   adivinaForm: FormGroup;
   
   constructor(private formBuilder:FormBuilder) {
-    this.generarNuevo();
     this.adivinaForm = this.formBuilder.group({
       'respuesta': [null, Validators.compose([Validators.required, Validators.maxLength(2)])]
     });
+    this.generarNuevo();
   }
 
   ngOnInit() {
