@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { Anagrama } from '../../clases/anagrama';
 
 @Component({
@@ -7,27 +8,93 @@ import { Anagrama } from '../../clases/anagrama';
   styleUrls: ['./anagrama.component.css']
 })
 export class AnagramaComponent implements OnInit {
-  palabras: Array<string>;
-  solucion: string;
-  palabraMezclada;
-  copiaSolucion;
-  constructor() { }
+  juego: Anagrama;
+  mensajeResultado: object;
+  mostrarMensajeResultado: boolean;
+  juegoForm: FormGroup;
 
-  ngOnInit() {
-    this.palabras = ['ORILLAS', 'PINTURAS', 'PROVINCIA', 'ANTIGUO', 'SUDAMERICA', 'REGISTRO', 'POBLACIONAL', 'TERRITORIO', 'ACTUALMENTE', 'CONTROLADO'];
-    this.solucion = this.palabras[Math.floor(Math.random() * 10)];//2121
-    this.copiaSolucion = this.solucion;
-    this.palabraMezclada = '';
-    for (var index = this.copiaSolucion.length; index > 0; index--) {
-      let posicionEliminar = Math.floor(Math.random() * this.copiaSolucion.length);
-      this.palabraMezclada += this.copiaSolucion[posicionEliminar];
-      this.copiaSolucion = this.copiaSolucion.substr(0, posicionEliminar) + this.copiaSolucion.substr(posicionEliminar + 1);
-    }
-    console.log('Solucion: ' + this.solucion);
-    console.log('palabraMezclada: ' + this.palabraMezclada);
-    //TRANSFORMAR TEXTO A MAYUSCULAS, CAMBIAR VOCALES ACENTUADAS POR NO ACENTUADAS Y APLICAR LAS DOS FUNCIONES DEBAJO
-    //this.texto = this.texto.replace(/[^a-zA-Z\s]/g,'');
-    //this.texto = this.texto.replace(/\W*\b\w{1,6}\b/g, "");
+  constructor(private formBuilder:FormBuilder) {
+    this.juegoForm = this.formBuilder.group({
+      'respuesta': [null, Validators.compose([Validators.required, Validators.pattern(/^[a-zA-Z]+$/), Validators.minLength(6)])]
+    });
+    this.generarNuevo();
   }
 
+  ngOnInit() {
+    this.generarAnimacion('palabraMezclada', 'lightSpeedIn');
+  }
+
+  generarNuevo() {
+    this.juego = new Anagrama('Pedro');
+    this.juego.generarSolucion();
+    this.mostrarMensajeResultado = false;
+  }
+
+  generarAnimacion(elementoId, animacion){
+    let elemento = document.getElementById(elementoId);
+    let funcion = function() {
+      elemento.removeEventListener('animationend', funcion)
+      elemento.classList.remove('animated', animacion);
+    }
+    elemento.classList.add('animated', animacion);
+    elemento.addEventListener('animationend', funcion);
+  }
+
+  accion(tipo){
+    this.mostrarMensajeResultado = false;
+    this.resetearFormulario();
+    if (tipo === 'gano' || tipo === 'perdio') {
+      this.generarNuevo();
+      this.generarAnimacion('palabraMezclada', 'lightSpeedIn');
+    }
+  }
+
+  resetearFormulario() {
+    this.juegoForm.reset();
+    setTimeout(function(){
+      document.getElementById("respuestaInput").focus();
+    }, 0);
+  }
+
+  verificar() {
+    this.juego.respuesta = this.juegoForm.value.respuesta.toUpperCase();
+    let intento = this.juego.verificar();
+    this.mostrarMensajeResultado = true;
+    if (intento === 'gano') {
+      this.mensajeResultado = {
+        tipo: 'gano',
+        bootstrapClass: 'alert-success',
+        imagenPath: './assets/gano.png',
+        titulo: 'Ganaste!',
+        subtitulo: 'Felicitaciones decifraste la palabra en ' + (4 - this.juego.erroresRestantes) + ' intento/s',
+        parrafo: 'Tu logro quedó registrado ¿Jugamos otra vez?',
+        textoBotonSecundario: 'Jugar otros juegos',
+        textoBotonPrimario: 'Nueva partida'
+      }
+    }
+    else if (intento === 'perdio') {
+      this.mensajeResultado = {
+        tipo: 'perdio',
+        bootstrapClass: 'alert-danger',
+        imagenPath: './assets/perdio.png',
+        titulo: 'Perdiste!',
+        subtitulo: 'Es que cometiste 3 errores',
+        parrafo: '¿Qué tal si intentas una nueva partida?',
+        textoBotonSecundario: 'Jugar otros juegos',
+        textoBotonPrimario: 'Nueva partida'
+      }
+    }
+    else if (intento == 'erro') {
+      this.mensajeResultado = {
+        tipo: 'erro',
+        bootstrapClass: 'alert-warning',
+        imagenPath: './assets/erro.png',
+        titulo: 'Erraste!',
+        subtitulo: 'Agudiza tu instinto',
+        parrafo: 'Te quedan ' + this.juego.erroresRestantes + ' oportunidad/es',
+        textoBotonSecundario: 'Jugar otros juegos',
+        textoBotonPrimario: 'Continuar'
+      }
+    }
+  }
 }

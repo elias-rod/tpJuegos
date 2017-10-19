@@ -2,8 +2,8 @@ export class Juego {
     nombre: string;
     jugador: string;
     gano: boolean;
-    solucion: number;
-    respuesta: number;
+    solucion: any;
+    respuesta: any;
 
     constructor(jugador: string) {
         this.jugador = jugador;

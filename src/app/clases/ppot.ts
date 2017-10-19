@@ -26,7 +26,7 @@ export class Ppot extends Juego {
     }
 
     verificar(){
-        //console.log('Solución: ' + this.solucion + '... respuesta: ' + this.respuesta + '...eleccionIA: ' + this.eleccionIA);
+        console.log('Solución: ' + this.solucion + '... respuesta: ' + this.respuesta + '...eleccionIA: ' + this.eleccionIA);
         if (this.respuesta === this.solucion) {
             this.aciertosRestantes--;
             if (this.aciertosRestantes == 0) {
@@ -34,7 +34,6 @@ export class Ppot extends Juego {
             }
             return 'acerto';
         }
-        //SI CASOS DE VICTORIA
         else if (this.eleccionIA === this.respuesta) {
             return 'empate';
 

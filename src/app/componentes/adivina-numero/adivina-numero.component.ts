@@ -10,10 +10,10 @@ import { AdivinaNumero } from '../../clases/adivina-numero';
 export class AdivinaNumeroComponent implements OnInit {
   argumentosModal: object;
   juego: AdivinaNumero;
-  adivinaForm: FormGroup;
+  juegoForm: FormGroup;
   
   constructor(private formBuilder:FormBuilder) {
-    this.adivinaForm = this.formBuilder.group({
+    this.juegoForm = this.formBuilder.group({
       'respuesta': [null, Validators.compose([Validators.required, Validators.maxLength(2)])]
     });
     this.generarNuevo();
@@ -28,8 +28,8 @@ export class AdivinaNumeroComponent implements OnInit {
     this.resetearFormulario();
   }
 
-  verificar(evento) {
-    this.juego.respuesta = this.adivinaForm.value.respuesta;
+  verificar() {
+    this.juego.respuesta = this.juegoForm.value.respuesta;
     this.juego.verificar();
     if (this.juego.gano) {
       this.argumentosModal = {
@@ -78,7 +78,7 @@ export class AdivinaNumeroComponent implements OnInit {
   }
 
   resetearFormulario() {
-    this.adivinaForm.reset();
+    this.juegoForm.reset();
     setTimeout(function(){
       document.getElementById("respuestaInput").focus();
     }, 0);

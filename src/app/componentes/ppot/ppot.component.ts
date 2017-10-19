@@ -7,7 +7,6 @@ import { Ppot } from '../../clases/ppot';
   styleUrls: ['./ppot.component.css']
 })
 export class PpotComponent implements OnInit {
-
   juego: Ppot;
   manos: Array<string>;
   pathImagenIA: string;
@@ -20,7 +19,6 @@ export class PpotComponent implements OnInit {
     this.manos = ['./assets/piedra.png', './assets/papel.png', './assets/tijera.png'];
     this.index = 0;
     this.generarNuevo();
-    
   }
 
   ngOnInit() {
@@ -38,9 +36,8 @@ export class PpotComponent implements OnInit {
   iniciarDesafio(){
     this.minutero = setInterval(
       () => {
-this.index = Math.floor(Math.random() * 3);
+        this.index = Math.floor(Math.random() * 3);
         (<HTMLInputElement>document.getElementById('imagenJugador')).src = this.manos[this.index];
-        //this.index++;
       }, 200
     );
   }
