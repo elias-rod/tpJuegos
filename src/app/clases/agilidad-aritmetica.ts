@@ -17,23 +17,27 @@ export class AgilidadAritmetica extends Juego{
     }
 
     generarSolucion(){
-        this.operando1 = Math.floor(Math.random() * 100);//del 0 al 100
-        this.operando2 = Math.floor(Math.random() * 100);//del 0 al 100
         switch (Math.floor((Math.random() * 3))) {
             case 0:
+            this.operando1 = Math.floor(Math.random() * 100);//del 0 al 100
+            this.operando2 = Math.floor(Math.random() * 100);//del 0 al 100
                 this.operador = "+";
                 this.solucion = this.operando1 + this.operando2;
-                this.segundosMax = 5;
+                this.segundosMax = 7;
                 break;
             case 1:
+            this.operando1 = Math.floor(Math.random() * 100);//del 0 al 100
+            this.operando2 = Math.floor(Math.random() * 100);//del 0 al 100
                 this.operador = "-";
                 this.solucion = this.operando1 - this.operando2;
                 this.segundosMax = 7;
                 break;
             case 2:
+            this.operando1 = Math.floor(Math.random() * 100);//del 0 al 100
+            this.operando2 = Math.floor(Math.random() * 9);//del 0 al 100
                 this.operador = "*";
                 this.solucion = this.operando1 * this.operando2;
-                this.segundosMax = 10;
+                this.segundosMax = 7;
                 break;
         }
         console.info("Solución: ", this.solucion);

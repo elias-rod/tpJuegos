@@ -7,7 +7,7 @@ export class AdivinaNumero extends Juego {
     constructor(jugador: string) {
         super(jugador);
         this.nombre = 'Adivina el número';
-        this.intentosRestantes = 7;
+        this.intentosRestantes = 6;
     }
 
     generarSolucion(){
@@ -17,10 +17,10 @@ export class AdivinaNumero extends Juego {
 
     generarPista(){
         if(this.respuesta > this.solucion){
-            this.pista = 'te pasaste, prueba con un número más pequeño';
+            this.pista = 'Prueba un número más chico';
         }
         else{
-            this.pista = 'te quedaste corto, prueba con un número más grande';
+            this.pista = 'Prueba un número más grande';
         }
     }
 

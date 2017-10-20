@@ -36,7 +36,7 @@ export class AdivinaNumeroComponent implements OnInit {
         tipo: 'gano',
         imagenPath: './assets/gano.png',
         titulo: 'Ganaste!',
-        subtitulo: 'Felicitaciones lo adivinaste en tan sólo ' + (7 - this.juego.intentosRestantes) + ' intentos',
+        subtitulo: 'Felicitaciones lo adivinaste en tan sólo ' + (6 - this.juego.intentosRestantes) + ' intento/s',
         parrafo: 'Tu logro quedó registrado ¿Jugamos otra vez?',
         textoBotonSecundario: 'Jugar otros juegos',
         textoBotonPrimario: 'Nueva partida'
@@ -47,8 +47,8 @@ export class AdivinaNumeroComponent implements OnInit {
         tipo: 'perdio',
         imagenPath: './assets/perdio.png',
         titulo: 'Perdiste!',
-        subtitulo: 'Lástima, el número secreto era ' +  this.juego.solucion,
-        parrafo: '¿Qué tal si intentas una nueva partida?',
+        subtitulo: 'El número secreto era: ' +  this.juego.solucion,
+        parrafo: '¿Intentamos de nuevo?',
         textoBotonSecundario: 'Jugar otros juegos',
         textoBotonPrimario: 'Nueva partida'
       }
@@ -59,8 +59,8 @@ export class AdivinaNumeroComponent implements OnInit {
         tipo: 'continua',
         imagenPath: './assets/error.png',
         titulo: 'Ups!',
-        subtitulo: this.juego.respuesta + '... ' + this.juego.pista,
-        parrafo: 'Te quedan ' + this.juego.intentosRestantes + ' intentos restantes...',
+        subtitulo: this.juego.pista,
+        parrafo: 'Te quedan ' + this.juego.intentosRestantes + ' oportunidad/es...',
         textoBotonSecundario: 'Jugar otros juegos',
         textoBotonPrimario: 'Continuar'
       }

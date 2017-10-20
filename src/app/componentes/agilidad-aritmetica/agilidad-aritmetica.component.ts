@@ -81,8 +81,8 @@ export class AgilidadAritmeticaComponent implements OnInit {
         tipo: 'perdio',
         imagenPath: './assets/perdio.png',
         titulo: 'Perdiste!',
-        subtitulo: 'Es que cometiste 3 errores de 5 intentos posibles. La respuesta correcta era: ' + this.juego.solucion,
-        parrafo: '¿Qué tal si intentas una nueva partida?',
+        subtitulo: 'La respuesta correcta era: ' + this.juego.solucion,
+        parrafo: '¿Intentamos de nuevo?',
         textoBotonSecundario: 'Jugar otros juegos',
         textoBotonPrimario: 'Nueva partida'
       }
@@ -93,7 +93,7 @@ export class AgilidadAritmeticaComponent implements OnInit {
         imagenPath: './assets/acerto.png',
         titulo: 'Acertaste!',
         subtitulo: 'Muy bien...',
-        parrafo: 'Necesitas acertar ' + this.juego.aciertosRestantes + ' más para ganar y si errás ' + this.juego.erroresRestantes + ' más, perdés',
+        parrafo: 'Necesitas acertar ' + this.juego.aciertosRestantes + ' más para ganar. Si errás ' + this.juego.erroresRestantes + ' más, perdés',
         textoBotonSecundario: 'Jugar otros juegos',
         textoBotonPrimario: 'Continuar'
       }
@@ -104,7 +104,7 @@ export class AgilidadAritmeticaComponent implements OnInit {
         imagenPath: './assets/erro.png',
         titulo: 'Erraste!',
         subtitulo: 'La respuesta correcta era: ' + this.juego.solucion,
-        parrafo: 'Necesitas acertar ' + this.juego.aciertosRestantes + ' más para ganar y si errás ' + this.juego.erroresRestantes + ' más, perdés',
+        parrafo: 'Necesitas acertar ' + this.juego.aciertosRestantes + ' más para ganar. Si errás ' + this.juego.erroresRestantes + ' más, perdés',
         textoBotonSecundario: 'Jugar otros juegos',
         textoBotonPrimario: 'Continuar'
       }

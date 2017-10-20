@@ -66,7 +66,7 @@ export class AnagramaComponent implements OnInit {
         bootstrapClass: 'alert-success',
         imagenPath: './assets/gano.png',
         titulo: 'Ganaste!',
-        subtitulo: 'Felicitaciones decifraste la palabra en ' + (4 - this.juego.erroresRestantes) + ' intento/s',
+        subtitulo: 'Decifraste la palabra en ' + (4 - this.juego.erroresRestantes) + ' intento/s',
         parrafo: 'Tu logro quedó registrado ¿Jugamos otra vez?',
         textoBotonSecundario: 'Jugar otros juegos',
         textoBotonPrimario: 'Nueva partida'
@@ -78,8 +78,8 @@ export class AnagramaComponent implements OnInit {
         bootstrapClass: 'alert-danger',
         imagenPath: './assets/perdio.png',
         titulo: 'Perdiste!',
-        subtitulo: 'Es que cometiste 3 errores',
-        parrafo: '¿Qué tal si intentas una nueva partida?',
+        subtitulo: 'La palabra era: ' + this.juego.solucion,
+        parrafo: '¿Intentamos de nuevo?',
         textoBotonSecundario: 'Jugar otros juegos',
         textoBotonPrimario: 'Nueva partida'
       }
@@ -90,7 +90,7 @@ export class AnagramaComponent implements OnInit {
         bootstrapClass: 'alert-warning',
         imagenPath: './assets/erro.png',
         titulo: 'Erraste!',
-        subtitulo: 'Agudiza tu instinto',
+        subtitulo: '',
         parrafo: 'Te quedan ' + this.juego.erroresRestantes + ' oportunidad/es',
         textoBotonSecundario: 'Jugar otros juegos',
         textoBotonPrimario: 'Continuar'

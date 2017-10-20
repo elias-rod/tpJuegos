@@ -71,7 +71,7 @@ export class AgudezaVisualComponent implements OnInit {
         bootstrapClass: 'alert-success',
         imagenPath: './assets/gano.png',
         titulo: 'Ganaste!',
-        subtitulo: 'Felicitaciones hiciste 3 aciertos en ' + (6 - (this.juego.aciertosRestantes + this.juego.erroresRestantes)) + ' intentos',
+        subtitulo: 'Hiciste 3 aciertos en ' + (6 - (this.juego.aciertosRestantes + this.juego.erroresRestantes)) + ' intento/s',
         parrafo: 'Tu logro quedó registrado ¿Jugamos otra vez?',
         textoBotonSecundario: 'Jugar otros juegos',
         textoBotonPrimario: 'Nueva partida'
@@ -83,8 +83,8 @@ export class AgudezaVisualComponent implements OnInit {
         bootstrapClass: 'alert-danger',
         imagenPath: './assets/perdio.png',
         titulo: 'Perdiste!',
-        subtitulo: 'Es que cometiste 3 errores de 5 intentos posibles. La respuesta correcta era: ' + (this.juego.solucion + 1),
-        parrafo: '¿Qué tal si intentas una nueva partida?',
+        subtitulo: 'La respuesta correcta era: ' + (this.juego.solucion + 1),
+        parrafo: '¿Intentamos de nuevo?',
         textoBotonSecundario: 'Jugar otros juegos',
         textoBotonPrimario: 'Nueva partida'
       }
@@ -95,8 +95,8 @@ export class AgudezaVisualComponent implements OnInit {
         bootstrapClass: 'alert-warning',
         imagenPath: './assets/acerto.png',
         titulo: 'Acertaste!',
-        subtitulo: 'Muy bien...',
-        parrafo: 'Necesitas acertar ' + this.juego.aciertosRestantes + ' más para ganar y si errás ' + this.juego.erroresRestantes + ' más, perdés',
+        subtitulo: '',
+        parrafo: 'Necesitas acertar ' + this.juego.aciertosRestantes + ' más para ganar. Si errás ' + this.juego.erroresRestantes + ' más, perdés',
         textoBotonSecundario: 'Jugar otros juegos',
         textoBotonPrimario: 'Continuar'
       }
@@ -108,7 +108,7 @@ export class AgudezaVisualComponent implements OnInit {
         imagenPath: './assets/erro.png',
         titulo: 'Erraste!',
         subtitulo: 'La opción correcta era la ' + (this.juego.solucion + 1),
-        parrafo: 'Necesitas acertar ' + this.juego.aciertosRestantes + ' más para ganar y si errás ' + this.juego.erroresRestantes + ' más, perdés',
+        parrafo: 'Necesitas acertar ' + this.juego.aciertosRestantes + ' más para ganar. Si errás ' + this.juego.erroresRestantes + ' más, perdés',
         textoBotonSecundario: 'Jugar otros juegos',
         textoBotonPrimario: 'Continuar'
       }
