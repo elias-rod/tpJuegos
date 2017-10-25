@@ -20,3 +20,8 @@ video {
 .transparent {
     opacity: 0.85;
 }
+
+#carita {
+    height: 128px;
+    width: 128px;
+}

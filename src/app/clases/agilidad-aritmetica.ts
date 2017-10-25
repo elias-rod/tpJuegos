@@ -5,7 +5,6 @@ export class AgilidadAritmetica extends Juego{
     operando2: number;
     operador: string;
     aciertosRestantes: number;
-    erroresRestantes: number;
     segundosMax: number;
     segundosRestantes: number;
     
@@ -13,7 +12,8 @@ export class AgilidadAritmetica extends Juego{
         super(jugador);
         this.nombre = 'Agilidad aritmética';
         this.aciertosRestantes = 3;//para ganar
-        this.erroresRestantes = 3;//para perder
+        this.vidas = 3;
+        this.segundosMax = 7;
     }
 
     generarSolucion(){
@@ -23,21 +23,18 @@ export class AgilidadAritmetica extends Juego{
             this.operando2 = Math.floor(Math.random() * 100);//del 0 al 100
                 this.operador = "+";
                 this.solucion = this.operando1 + this.operando2;
-                this.segundosMax = 7;
                 break;
             case 1:
             this.operando1 = Math.floor(Math.random() * 100);//del 0 al 100
             this.operando2 = Math.floor(Math.random() * 100);//del 0 al 100
                 this.operador = "-";
                 this.solucion = this.operando1 - this.operando2;
-                this.segundosMax = 7;
                 break;
             case 2:
             this.operando1 = Math.floor(Math.random() * 100);//del 0 al 100
             this.operando2 = Math.floor(Math.random() * 9);//del 0 al 100
                 this.operador = "*";
                 this.solucion = this.operando1 * this.operando2;
-                this.segundosMax = 7;
                 break;
         }
         console.info("Solución: ", this.solucion);
@@ -47,12 +44,16 @@ export class AgilidadAritmetica extends Juego{
         if (this.respuesta == this.solucion) {
             this.aciertosRestantes--;
             if (this.aciertosRestantes == 0) {
-                this.gano = true;
+                this.puntos = 3;
+                return 'gano';
             }
             return 'acerto';
         }
         else {
-            this.erroresRestantes--;
+            this.vidas--;
+            if(this.vidas === 0){
+                return 'perdio';
+            }
             return 'erro';
         }
     }

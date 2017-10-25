@@ -54,10 +54,12 @@ export class AnagramaComponent implements OnInit {
     setTimeout(function(){
       document.getElementById("respuestaInput").focus();
     }, 0);
+    (<HTMLInputElement>document.getElementById("respuestaInput")).disabled = false;
   }
 
   verificar() {
     this.juego.respuesta = this.juegoForm.value.respuesta.toUpperCase();
+    (<HTMLInputElement>document.getElementById("respuestaInput")).disabled = true;
     let intento = this.juego.verificar();
     this.mostrarMensajeResultado = true;
     if (intento === 'gano') {
@@ -65,8 +67,8 @@ export class AnagramaComponent implements OnInit {
         tipo: 'gano',
         bootstrapClass: 'alert-success',
         imagenPath: './assets/gano.png',
-        titulo: 'Ganaste!',
-        subtitulo: 'Decifraste la palabra en ' + (4 - this.juego.erroresRestantes) + ' intento/s',
+        titulo: 'Muy bien!',
+        subtitulo: 'Ganaste ' + this.juego.puntos + ' puntos',
         parrafo: 'Tu logro quedó registrado ¿Jugamos otra vez?',
         textoBotonSecundario: 'Jugar otros juegos',
         textoBotonPrimario: 'Nueva partida'
@@ -77,23 +79,11 @@ export class AnagramaComponent implements OnInit {
         tipo: 'perdio',
         bootstrapClass: 'alert-danger',
         imagenPath: './assets/perdio.png',
-        titulo: 'Perdiste!',
+        titulo: 'Incorrecto',
         subtitulo: 'La palabra era: ' + this.juego.solucion,
         parrafo: '¿Intentamos de nuevo?',
         textoBotonSecundario: 'Jugar otros juegos',
         textoBotonPrimario: 'Nueva partida'
-      }
-    }
-    else if (intento == 'erro') {
-      this.mensajeResultado = {
-        tipo: 'erro',
-        bootstrapClass: 'alert-warning',
-        imagenPath: './assets/erro.png',
-        titulo: 'Erraste!',
-        subtitulo: '',
-        parrafo: 'Te quedan ' + this.juego.erroresRestantes + ' oportunidad/es',
-        textoBotonSecundario: 'Jugar otros juegos',
-        textoBotonPrimario: 'Continuar'
       }
     }
   }

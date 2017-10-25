@@ -3,14 +3,13 @@ import { Juego } from './juego';
 export class AgudezaVisual extends Juego {
     color: string[];
     aciertosRestantes: number;
-    erroresRestantes: number;
 
     constructor(jugador: string) {
         super(jugador);
         this.nombre = 'Agudeza visual';
         this.color = [];
         this.aciertosRestantes = 3;//para ganar
-        this.erroresRestantes = 3;//para perder
+        this.vidas = 3;//para perder
     }
 
     generarSolucion(){
@@ -42,15 +41,19 @@ export class AgudezaVisual extends Juego {
 
     verificar(){
         console.log('Solución: ' + (this.solucion + 1));
-        if(this.solucion == this.respuesta){
+        if (this.respuesta == this.solucion) {
             this.aciertosRestantes--;
             if (this.aciertosRestantes == 0) {
-                this.gano = true;
+                this.puntos = 3;
+                return 'gano';
             }
             return 'acerto';
         }
         else {
-            this.erroresRestantes--;
+            this.vidas--;
+            if(this.vidas === 0){
+                return 'perdio';
+            }
             return 'erro';
         }
     }

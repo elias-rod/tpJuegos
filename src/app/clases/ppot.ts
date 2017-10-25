@@ -2,14 +2,13 @@ import { Juego } from './juego';
 
 export class Ppot extends Juego {
     aciertosRestantes: number;
-    erroresRestantes: number;
     eleccionIA: number;
 
     constructor(jugador: string) {
         super(jugador);
         this.nombre = 'Piedra, papel o tijera';
         this.aciertosRestantes = 3;//para ganar
-        this.erroresRestantes = 3;//para perder
+        this.vidas = 3;//para perder
     }
 
     generarSolucion(){
@@ -30,16 +29,19 @@ export class Ppot extends Juego {
         if (this.respuesta === this.solucion) {
             this.aciertosRestantes--;
             if (this.aciertosRestantes == 0) {
-                this.gano = true;
+                this.puntos = 3;
+                return 'gano'
             }
             return 'acerto';
         }
         else if (this.eleccionIA === this.respuesta) {
             return 'empate';
-
         }
         else {
-            this.erroresRestantes--;
+            this.vidas--;
+            if(this.vidas === 0){
+                return 'perdio';
+            }
             return 'erro';
         }
     }

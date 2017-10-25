@@ -2,12 +2,11 @@ import { Juego } from './juego';
 
 export class AdivinaNumero extends Juego {
     pista: string;
-    intentosRestantes: number;
 
     constructor(jugador: string) {
         super(jugador);
         this.nombre = 'Adivina el número';
-        this.intentosRestantes = 6;
+        this.vidas = 6;
     }
 
     generarSolucion(){
@@ -17,17 +16,24 @@ export class AdivinaNumero extends Juego {
 
     generarPista(){
         if(this.respuesta > this.solucion){
-            this.pista = 'Prueba un número más chico';
+            this.pista = 'Intentá un número más chico';
         }
         else{
-            this.pista = 'Prueba un número más grande';
+            this.pista = 'Intentá un número más grande';
         }
     }
 
     verificar(){
-        this.intentosRestantes--;
+        this.vidas--;
         if (this.respuesta == this.solucion) {
-            this.gano = true;
+            this.puntos = this.vidas + 1;
+            return 'gano';
+        }
+        else if(this.vidas === 0) {
+            return 'perdio';
+        }
+        else {
+            return 'continua';
         }
     }
 }

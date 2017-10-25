@@ -63,25 +63,30 @@ export class AgilidadAritmeticaComponent implements OnInit {
 
   verificar() {
     clearInterval(this.minutero);
+    $(document).ready(function() {
+      $("#modal").on('shown.bs.modal', function(event) {
+        $("#botonPrimario").focus();
+      });
+    });
     this.juego.respuesta = this.agilidadForm.value.respuesta;
     let intento = this.juego.verificar();
-    if (this.juego.gano) {
+    if (intento === 'gano') {
       this.argumentosModal = {
         tipo: 'gano',
         imagenPath: './assets/gano.png',
-        titulo: 'Ganaste!',
-        subtitulo: 'Felicitaciones hiciste 3 aciertos en ' + (6 - (this.juego.aciertosRestantes + this.juego.erroresRestantes)) + ' intentos',
+        titulo: 'Muy bien!',
+        subtitulo: 'Ganaste ' + this.juego.puntos + ' puntos',
         parrafo: 'Tu logro quedó registrado ¿Jugamos otra vez?',
         textoBotonSecundario: 'Jugar otros juegos',
         textoBotonPrimario: 'Nueva partida'
       }
     }
-    else if (this.juego.erroresRestantes == 0) {
+    else if (intento === 'perdio') {
       this.argumentosModal = {
         tipo: 'perdio',
         imagenPath: './assets/perdio.png',
-        titulo: 'Perdiste!',
-        subtitulo: 'La respuesta correcta era: ' + this.juego.solucion,
+        titulo: 'Te quedaste sin vidas',
+        subtitulo: this.juego.operando1 + ' ' + this.juego.operador + ' ' + this.juego.operando2 + ' = ' + this.juego.solucion + '. Vos respondiste: ' + (this.juego.respuesta == null?'nada':this.juego.respuesta),
         parrafo: '¿Intentamos de nuevo?',
         textoBotonSecundario: 'Jugar otros juegos',
         textoBotonPrimario: 'Nueva partida'
@@ -92,8 +97,8 @@ export class AgilidadAritmeticaComponent implements OnInit {
         tipo: 'continua',
         imagenPath: './assets/acerto.png',
         titulo: 'Acertaste!',
-        subtitulo: 'Muy bien...',
-        parrafo: 'Necesitas acertar ' + this.juego.aciertosRestantes + ' más para ganar. Si errás ' + this.juego.erroresRestantes + ' más, perdés',
+        subtitulo: this.juego.operando1 + ' ' + this.juego.operador + ' ' + this.juego.operando2 + ' = ' + this.juego.solucion,
+        parrafo: 'Necesitas acertar ' + this.juego.aciertosRestantes + ' veces más para ganar. Te ' + (this.juego.vidas===1?'queda 1 vida':('quedan ' + this.juego.vidas + ' vidas')),
         textoBotonSecundario: 'Jugar otros juegos',
         textoBotonPrimario: 'Continuar'
       }
@@ -102,9 +107,9 @@ export class AgilidadAritmeticaComponent implements OnInit {
       this.argumentosModal = {
         tipo: 'continua',
         imagenPath: './assets/erro.png',
-        titulo: 'Erraste!',
-        subtitulo: 'La respuesta correcta era: ' + this.juego.solucion,
-        parrafo: 'Necesitas acertar ' + this.juego.aciertosRestantes + ' más para ganar. Si errás ' + this.juego.erroresRestantes + ' más, perdés',
+        titulo: 'Erraste',
+        subtitulo: this.juego.operando1 + ' ' + this.juego.operador + ' ' + this.juego.operando2 + ' = ' + this.juego.solucion + '. Vos respondiste: ' + (this.juego.respuesta == null?'nada':this.juego.respuesta),
+        parrafo: 'Necesitas acertar ' + this.juego.aciertosRestantes + ' veces más para ganar. Te ' + (this.juego.vidas===1?'queda 1 vida':('quedan ' + this.juego.vidas + ' vidas')),
         textoBotonSecundario: 'Jugar otros juegos',
         textoBotonPrimario: 'Continuar'
       }

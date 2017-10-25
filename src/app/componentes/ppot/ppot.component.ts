@@ -71,25 +71,25 @@ export class PpotComponent implements OnInit {
     this.juego.respuesta = respuesta;
     let intento = this.juego.verificar();
     this.mostrarMensajeResultado = true;
-    if (this.juego.gano) {
+    if (intento === 'gano') {
       this.mensajeResultado = {
         tipo: 'gano',
         bootstrapClass: 'alert-success',
         imagenPath: './assets/gano.png',
-        titulo: 'Ganaste!',
-        subtitulo: 'Felicitaciones hiciste 3 aciertos en ' + (6 - (this.juego.aciertosRestantes + this.juego.erroresRestantes)) + ' intentos',
+        titulo: 'Muy bien!',
+        subtitulo: 'Ganaste ' + this.juego.puntos + ' puntos',
         parrafo: 'Tu logro quedó registrado ¿Jugamos otra vez?',
         textoBotonSecundario: 'Jugar otros juegos',
         textoBotonPrimario: 'Nueva partida'
       }
     }
-    else if (this.juego.erroresRestantes == 0) {
+    else if (intento === 'perdio') {
       this.mensajeResultado = {
         tipo: 'perdio',
         bootstrapClass: 'alert-danger',
         imagenPath: './assets/perdio.png',
-        titulo: 'Perdiste!',
-        subtitulo: 'Es que cometiste 3 errores de 5 intentos posibles',
+        titulo: 'Te quedaste sin vidas',
+        subtitulo: 'No todo está perdido...',
         parrafo: '¿Qué tal si intentas una nueva partida?',
         textoBotonSecundario: 'Jugar otros juegos',
         textoBotonPrimario: 'Nueva partida'
@@ -101,8 +101,8 @@ export class PpotComponent implements OnInit {
         bootstrapClass: 'alert-warning',
         imagenPath: './assets/acerto.png',
         titulo: 'Acertaste!',
-        subtitulo: 'Muy bien...',
-        parrafo: 'Necesitas acertar ' + this.juego.aciertosRestantes + ' más para ganar y si errás ' + this.juego.erroresRestantes + ' más, perdés',
+        subtitulo: '',
+        parrafo: 'Necesitás acertar ' + this.juego.aciertosRestantes + ' veces más para ganar. Te ' + (this.juego.vidas===1?'queda 1 vida':('quedan ' + this.juego.vidas + ' vidas')),
         textoBotonSecundario: 'Jugar otros juegos',
         textoBotonPrimario: 'Continuar'
       }
@@ -112,9 +112,9 @@ export class PpotComponent implements OnInit {
         tipo: 'erro',
         bootstrapClass: 'alert-warning',
         imagenPath: './assets/erro.png',
-        titulo: 'Erraste!',
-        subtitulo: 'Debes ser más rápido',
-        parrafo: 'Necesitas acertar ' + this.juego.aciertosRestantes + ' más para ganar y si errás ' + this.juego.erroresRestantes + ' más, perdés',
+        titulo: 'Erraste',
+        subtitulo: 'Tenés que ser más rápido',
+        parrafo: 'Necesitás acertar ' + this.juego.aciertosRestantes + ' veces más para ganar. Te ' + (this.juego.vidas===1?'queda 1 vida':('quedan ' + this.juego.vidas + ' vidas')),
         textoBotonSecundario: 'Jugar otros juegos',
         textoBotonPrimario: 'Continuar'
       }
@@ -125,8 +125,8 @@ export class PpotComponent implements OnInit {
         bootstrapClass: 'alert-info',
         imagenPath: './assets/empate.png',
         titulo: 'Empate',
-        subtitulo: 'Sigamos...',
-        parrafo: 'Necesitas acertar ' + this.juego.aciertosRestantes + ' más para ganar y si erras ' + this.juego.erroresRestantes + ' más, perdés',
+        subtitulo: 'Aqui no ha pasado nada...',
+        parrafo: 'Necesitás acertar ' + this.juego.aciertosRestantes + ' veces más para ganar. Te ' + (this.juego.vidas===1?'queda 1 vida':('quedan ' + this.juego.vidas + ' vidas')),
         textoBotonSecundario: 'Jugar otros juegos',
         textoBotonPrimario: 'Continuar'
       }

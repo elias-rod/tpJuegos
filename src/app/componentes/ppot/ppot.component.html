@@ -8,11 +8,11 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-md-6" align="center">
-                            <h3>Inteligencia artificial</h3>
+                            <h4>Inteligencia artificial</h4>
                             <img id="manoIA" [src]="pathImagenIA">
                         </div>
                         <div class="col-md-6" align="center">
-                            <h3>Vos</h3>
+                            <h4>Vos</h4>
                             <input type="image" id="imagenJugador" [disabled]="mostrarMensajeResultado" class="img-responsive" (click)="verificar(index);">
                         </div>
                     </div>
@@ -20,7 +20,7 @@
                         <h2 align="center">{{mensajeResultado?.titulo}}</h2>
                         <div class="media">
                             <div class="media-left">
-                                <img [src]="mensajeResultado.imagenPath" class="media-object">
+                                <img id="carita" [src]="mensajeResultado.imagenPath" class="media-object">
                             </div>
                             <div class="media-body">
                                 <h4 class="media-heading">{{mensajeResultado?.subtitulo}}</h4>

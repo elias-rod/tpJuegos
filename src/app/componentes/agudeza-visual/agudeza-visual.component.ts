@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AgudezaVisual } from '../../clases/agudeza-visual';
 
+declare var $: any;
+
 @Component({
   selector: 'app-agudeza-visual',
   templateUrl: './agudeza-visual.component.html',
@@ -61,54 +63,57 @@ export class AgudezaVisualComponent implements OnInit {
   }
 
   verificar(respuesta) {
+    $(document).ready(function() {
+      $("#botonPrimario").focus();
+    });
     this.juego.respuesta = respuesta;
     let intento = this.juego.verificar();
     this.mostrarMensajeResultado = true;
     this.claseDinamicaOpciones = 'solucion';
-    if (this.juego.gano) {
+    if (intento === 'gano') {
       this.mensajeResultado = {
         tipo: 'gano',
         bootstrapClass: 'alert-success',
         imagenPath: './assets/gano.png',
-        titulo: 'Ganaste!',
-        subtitulo: 'Hiciste 3 aciertos en ' + (6 - (this.juego.aciertosRestantes + this.juego.erroresRestantes)) + ' intento/s',
+        titulo: 'Muy bien!',
+        subtitulo: 'Ganaste ' + this.juego.puntos + ' puntos',
         parrafo: 'Tu logro quedó registrado ¿Jugamos otra vez?',
         textoBotonSecundario: 'Jugar otros juegos',
         textoBotonPrimario: 'Nueva partida'
       }
     }
-    else if (this.juego.erroresRestantes == 0) {
+    else if (intento === 'perdio') {
       this.mensajeResultado = {
         tipo: 'perdio',
         bootstrapClass: 'alert-danger',
         imagenPath: './assets/perdio.png',
-        titulo: 'Perdiste!',
+        titulo: 'Te quedaste sin vidas',
         subtitulo: 'La respuesta correcta era: ' + (this.juego.solucion + 1),
         parrafo: '¿Intentamos de nuevo?',
         textoBotonSecundario: 'Jugar otros juegos',
         textoBotonPrimario: 'Nueva partida'
       }
     }
-    else if (intento == 'acerto') {
+    else if (intento === 'acerto') {
       this.mensajeResultado = {
         tipo: 'acerto',
         bootstrapClass: 'alert-warning',
         imagenPath: './assets/acerto.png',
         titulo: 'Acertaste!',
         subtitulo: '',
-        parrafo: 'Necesitas acertar ' + this.juego.aciertosRestantes + ' más para ganar. Si errás ' + this.juego.erroresRestantes + ' más, perdés',
+        parrafo: 'Necesitás acertar ' + this.juego.aciertosRestantes + ' veces más para ganar. Te ' + (this.juego.vidas===1?'queda 1 vida':('quedan ' + this.juego.vidas + ' vidas')),
         textoBotonSecundario: 'Jugar otros juegos',
         textoBotonPrimario: 'Continuar'
       }
     }
-    else if (intento == 'erro') {
+    else if (intento === 'erro') {
       this.mensajeResultado = {
         tipo: 'erro',
         bootstrapClass: 'alert-warning',
         imagenPath: './assets/erro.png',
-        titulo: 'Erraste!',
+        titulo: 'Erraste',
         subtitulo: 'La opción correcta era la ' + (this.juego.solucion + 1),
-        parrafo: 'Necesitas acertar ' + this.juego.aciertosRestantes + ' más para ganar. Si errás ' + this.juego.erroresRestantes + ' más, perdés',
+        parrafo: 'Necesitás acertar ' + this.juego.aciertosRestantes + ' veces más para ganar. Te ' + (this.juego.vidas===1?'queda 1 vida':('quedan ' + this.juego.vidas + ' vidas')),
         textoBotonSecundario: 'Jugar otros juegos',
         textoBotonPrimario: 'Continuar'
       }

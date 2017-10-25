@@ -1,7 +1,7 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { AdivinaNumero } from '../../clases/adivina-numero';
-
+declare var $: any;
 @Component({
   selector: 'app-adivina-numero',
   templateUrl: './adivina-numero.component.html',
@@ -29,20 +29,26 @@ export class AdivinaNumeroComponent implements OnInit {
   }
 
   verificar() {
+    $(document).ready(function() {
+      $("#modal").on('shown.bs.modal', function(event) {
+        $("#botonPrimario").focus();
+      });
+    });
+    
     this.juego.respuesta = this.juegoForm.value.respuesta;
-    this.juego.verificar();
-    if (this.juego.gano) {
+    let resultado = this.juego.verificar();
+    if (resultado === 'gano') {
       this.argumentosModal = {
         tipo: 'gano',
         imagenPath: './assets/gano.png',
-        titulo: 'Ganaste!',
-        subtitulo: 'Felicitaciones lo adivinaste en tan sólo ' + (6 - this.juego.intentosRestantes) + ' intento/s',
+        titulo: 'Acertaste!',
+        subtitulo: this.juego.puntos === 1?'Ganaste 1 punto':'Ganaste ' + this.juego.puntos + ' puntos',
         parrafo: 'Tu logro quedó registrado ¿Jugamos otra vez?',
         textoBotonSecundario: 'Jugar otros juegos',
         textoBotonPrimario: 'Nueva partida'
       }
     }
-    else if (this.juego.intentosRestantes == 0) {
+    else if (resultado === 'perdio') {
       this.argumentosModal = {
         tipo: 'perdio',
         imagenPath: './assets/perdio.png',
@@ -53,14 +59,14 @@ export class AdivinaNumeroComponent implements OnInit {
         textoBotonPrimario: 'Nueva partida'
       }
     }
-    else {
+    else if (resultado === 'continua'){
       this.juego.generarPista();
       this.argumentosModal = {
         tipo: 'continua',
         imagenPath: './assets/error.png',
         titulo: 'Ups!',
         subtitulo: this.juego.pista,
-        parrafo: 'Te quedan ' + this.juego.intentosRestantes + ' oportunidad/es...',
+        parrafo: this.juego.vidas === 1?'Te queda 1 vida':'Te quedan ' + this.juego.vidas + ' vidas',
         textoBotonSecundario: 'Jugar otros juegos',
         textoBotonPrimario: 'Continuar'
       }
