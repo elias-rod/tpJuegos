@@ -1,0 +1,42 @@
+<div class="modal fade" id="detalle" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="media">
+          <div class="media-left">
+            <img [src]="pathFotosServer + jugador.id + '.png?random=' + random" class="media-object avatar" *ngIf="jugador">
+          </div>
+          <div class="media-body">
+            <h4 class="media-heading">{{ jugador?.alias }}</h4>
+            <p class="text-success">Jugadas ganadas: {{ jugador?.ganadas }}</p>
+            <p class="text-danger">Jugadas perdidas: {{ jugador?.perdidas }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-body">
+        <app-spinner *ngIf="!jugadas"></app-spinner>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Fecha y hora</th>
+              <th>Juego</th>
+              <th>Victoria</th>
+              <th>Puntos</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let jugada of jugadas">
+              <td>{{ jugada?.momento }}</td>
+              <td>{{ jugada?.nombre }}</td>
+              <td>{{ jugada?.gano | victoria}}</td>
+              <td>{{ jugada?.puntos }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="detalleCerro.emit()">Ok</button>
+      </div>
+    </div>
+  </div>
+</div>

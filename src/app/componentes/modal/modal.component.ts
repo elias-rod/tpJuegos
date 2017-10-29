@@ -6,7 +6,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
   styleUrls: ['./modal.component.css']
 })
 export class ModalComponent implements OnInit {
-  @Input() parametrosModal: Object;
+  @Input() parametrosModal: object;
   @Output() clickBotonPrimario = new EventEmitter();
   
   constructor() { }

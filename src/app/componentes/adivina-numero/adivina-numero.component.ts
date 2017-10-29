@@ -8,9 +8,10 @@ declare var $: any;
   styleUrls: ['./adivina-numero.component.css']
 })
 export class AdivinaNumeroComponent implements OnInit {
-  argumentosModal: object;
   juego: AdivinaNumero;
   juegoForm: FormGroup;
+  mensajeResultado: object;
+  mostrarMensajeResultado: boolean;
   
   constructor(private formBuilder:FormBuilder) {
     this.juegoForm = this.formBuilder.group({
@@ -25,21 +26,31 @@ export class AdivinaNumeroComponent implements OnInit {
   generarNuevo() {
     this.juego = new AdivinaNumero('Pedro');
     this.juego.generarSolucion();
-    this.resetearFormulario();
   }
 
-  verificar() {
-    $(document).ready(function() {
-      $("#modal").on('shown.bs.modal', function(event) {
-        $("#botonPrimario").focus();
-      });
-    });
-    
+  accion(tipo){
+    this.mostrarMensajeResultado = false;
+    this.resetearFormulario();
+    if (tipo !== 'continua') {
+      this.generarNuevo();
+    }
+  }
+
+  resetearFormulario() {
+    this.juegoForm.reset();
+    (<HTMLInputElement>document.getElementById("respuestaInput")).disabled = false;
+    document.getElementById("respuestaInput").focus();
+  }
+
+  verificar() {    
     this.juego.respuesta = this.juegoForm.value.respuesta;
+    (<HTMLInputElement>document.getElementById("respuestaInput")).disabled = true;
     let resultado = this.juego.verificar();
+    this.mostrarMensajeResultado = true;
     if (resultado === 'gano') {
-      this.argumentosModal = {
+      this.mensajeResultado = {
         tipo: 'gano',
+        bootstrapClass: 'alert-success',
         imagenPath: './assets/gano.png',
         titulo: 'Acertaste!',
         subtitulo: this.juego.puntos === 1?'Ganaste 1 punto':'Ganaste ' + this.juego.puntos + ' puntos',
@@ -49,8 +60,9 @@ export class AdivinaNumeroComponent implements OnInit {
       }
     }
     else if (resultado === 'perdio') {
-      this.argumentosModal = {
+      this.mensajeResultado = {
         tipo: 'perdio',
+        bootstrapClass: 'alert-danger',
         imagenPath: './assets/perdio.png',
         titulo: 'Perdiste!',
         subtitulo: 'El número secreto era: ' +  this.juego.solucion,
@@ -61,8 +73,9 @@ export class AdivinaNumeroComponent implements OnInit {
     }
     else if (resultado === 'continua'){
       this.juego.generarPista();
-      this.argumentosModal = {
+      this.mensajeResultado = {
         tipo: 'continua',
+        bootstrapClass: 'alert-warning',
         imagenPath: './assets/error.png',
         titulo: 'Ups!',
         subtitulo: this.juego.pista,
@@ -71,22 +84,8 @@ export class AdivinaNumeroComponent implements OnInit {
         textoBotonPrimario: 'Continuar'
       }
     }
-  }
-
-  accionModal(tipo){
-    if (tipo === 'continua') {
-      this.resetearFormulario();
-    }
-    else {
-      this.generarNuevo();
-      this.resetearFormulario();
-    }
-  }
-
-  resetearFormulario() {
-    this.juegoForm.reset();
     setTimeout(function(){
-      document.getElementById("respuestaInput").focus();
+      document.getElementById("botonPrimario").focus();
     }, 0);
   }
 }

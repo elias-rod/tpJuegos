@@ -12,17 +12,18 @@ declare var $: any;
 export class AgilidadAritmeticaComponent implements OnInit {
 
   juego: AgilidadAritmetica;
-  agilidadForm: FormGroup;
-  argumentosModal: object;
+  juegoForm: FormGroup;
+  mensajeResultado: object;
+  mostrarMensajeResultado: boolean;
   progresoBarra: number;
-  colorBarra: string;
+  colorBarra: string = '';
   minutero;
+
   constructor(private formBuilder:FormBuilder) {
-    this.agilidadForm = this.formBuilder.group({
+    this.juegoForm = this.formBuilder.group({
       'respuesta': [null, Validators.compose([Validators.required, Validators.maxLength(4)])]
     });
     this.generarNuevo();
-    this.colorBarra = '';
   }
 
   ngOnInit() {
@@ -34,7 +35,7 @@ export class AgilidadAritmeticaComponent implements OnInit {
       () => {
         if(this.juego.segundosRestantes == 0) {
           this.verificar();
-          $("#modal").modal("show");
+          //$("#modal").modal("show");borrar
           return;
         }
         else {
@@ -57,22 +58,37 @@ export class AgilidadAritmeticaComponent implements OnInit {
   generarNuevo() {
     this.juego = new AgilidadAritmetica('Pedro');
     this.juego.generarSolucion();
-    this.resetearFormulario();
     this.iniciarCuentaRegresiva();
+  }
+
+  accion(tipo){
+    this.mostrarMensajeResultado = false;
+    this.resetearFormulario();
+    if (tipo === 'continua') {
+      this.juego.generarSolucion();
+      this.iniciarCuentaRegresiva();
+    }
+    else {
+      this.generarNuevo();
+    }
+  }
+
+  resetearFormulario() {
+    this.juegoForm.reset();
+    (<HTMLInputElement>document.getElementById("respuestaInput")).disabled = false;
+    document.getElementById("respuestaInput").focus();
   }
 
   verificar() {
     clearInterval(this.minutero);
-    $(document).ready(function() {
-      $("#modal").on('shown.bs.modal', function(event) {
-        $("#botonPrimario").focus();
-      });
-    });
-    this.juego.respuesta = this.agilidadForm.value.respuesta;
+    this.juego.respuesta = this.juegoForm.value.respuesta;
+    (<HTMLInputElement>document.getElementById("respuestaInput")).disabled = true;
     let intento = this.juego.verificar();
+    this.mostrarMensajeResultado = true;
     if (intento === 'gano') {
-      this.argumentosModal = {
+      this.mensajeResultado = {
         tipo: 'gano',
+        bootstrapClass: 'alert-success',
         imagenPath: './assets/gano.png',
         titulo: 'Muy bien!',
         subtitulo: 'Ganaste ' + this.juego.puntos + ' puntos',
@@ -82,8 +98,9 @@ export class AgilidadAritmeticaComponent implements OnInit {
       }
     }
     else if (intento === 'perdio') {
-      this.argumentosModal = {
+      this.mensajeResultado = {
         tipo: 'perdio',
+        bootstrapClass: 'alert-danger',
         imagenPath: './assets/perdio.png',
         titulo: 'Te quedaste sin vidas',
         subtitulo: this.juego.operando1 + ' ' + this.juego.operador + ' ' + this.juego.operando2 + ' = ' + this.juego.solucion + '. Vos respondiste: ' + (this.juego.respuesta == null?'nada':this.juego.respuesta),
@@ -93,8 +110,9 @@ export class AgilidadAritmeticaComponent implements OnInit {
       }
     }
     else if (intento == 'acerto') {
-      this.argumentosModal = {
+      this.mensajeResultado = {
         tipo: 'continua',
+        bootstrapClass: 'alert-warning',
         imagenPath: './assets/acerto.png',
         titulo: 'Acertaste!',
         subtitulo: this.juego.operando1 + ' ' + this.juego.operador + ' ' + this.juego.operando2 + ' = ' + this.juego.solucion,
@@ -104,8 +122,9 @@ export class AgilidadAritmeticaComponent implements OnInit {
       }
     }
     else if (intento == 'erro') {
-      this.argumentosModal = {
+      this.mensajeResultado = {
         tipo: 'continua',
+        bootstrapClass: 'alert-warning',
         imagenPath: './assets/erro.png',
         titulo: 'Erraste',
         subtitulo: this.juego.operando1 + ' ' + this.juego.operador + ' ' + this.juego.operando2 + ' = ' + this.juego.solucion + '. Vos respondiste: ' + (this.juego.respuesta == null?'nada':this.juego.respuesta),
@@ -114,24 +133,8 @@ export class AgilidadAritmeticaComponent implements OnInit {
         textoBotonPrimario: 'Continuar'
       }
     }
-  }
-
-  accionModal(tipo){
-    if (tipo === 'continua') {
-      this.juego.generarSolucion();
-      this.resetearFormulario();
-      this.iniciarCuentaRegresiva();
-    }
-    else {
-      this.generarNuevo();
-      this.resetearFormulario();
-    }
-  }
-
-  resetearFormulario() {
-    this.agilidadForm.reset();
     setTimeout(function(){
-      document.getElementById("respuestaInput").focus();
+      document.getElementById("botonPrimario").focus();
     }, 0);
   }
 }

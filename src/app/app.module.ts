@@ -2,17 +2,18 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
+import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
 import { RuteoModule } from './modulos/ruteo.module';
+
+import { HttpService } from './servicios/http.service';
+
 import { LoginComponent } from './componentes/login/login.component';
 import { MenuComponent } from './componentes/menu/menu.component';
 import { AdivinaNumeroComponent } from './componentes/adivina-numero/adivina-numero.component';
 import { AgilidadAritmeticaComponent } from './componentes/agilidad-aritmetica/agilidad-aritmetica.component';
 import { AgudezaVisualComponent } from './componentes/agudeza-visual/agudeza-visual.component';
-import { JuegoService } from './servicios/juego.service';
-import { ListadoComponent } from './componentes/listado/listado.component';
-import { ListadoResultadosComponent } from './componentes/listado-resultados/listado-resultados.component';
 import { ErrorComponent } from './componentes/error/error.component';
 import { InicialComponent } from './componentes/inicial/inicial.component';
 import { RegistroComponent } from './componentes/registro/registro.component';
@@ -20,6 +21,10 @@ import { JuegosComponent } from './componentes/juegos/juegos.component';
 import { ModalComponent } from './componentes/modal/modal.component';
 import { PpotComponent } from './componentes/ppot/ppot.component';
 import { AnagramaComponent } from './componentes/anagrama/anagrama.component';
+import { DetalleComponent } from './componentes/detalle/detalle.component';
+import { RankingComponent } from './componentes/ranking/ranking.component';
+import { VictoriaPipe } from './pipes/victoria.pipe';
+import { SpinnerComponent } from './componentes/spinner/spinner.component';
 
 @NgModule({
   declarations: [
@@ -29,8 +34,6 @@ import { AnagramaComponent } from './componentes/anagrama/anagrama.component';
     AgilidadAritmeticaComponent,
     MenuComponent,
     AgudezaVisualComponent,
-    ListadoResultadosComponent,
-    ListadoComponent,
     ErrorComponent,
     InicialComponent,
     InicialComponent,
@@ -38,15 +41,22 @@ import { AnagramaComponent } from './componentes/anagrama/anagrama.component';
     JuegosComponent,
     ModalComponent,
     PpotComponent,
-    AnagramaComponent
+    AnagramaComponent,
+    DetalleComponent,
+    RankingComponent,
+    VictoriaPipe,
+    SpinnerComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,
-    RuteoModule
+    RuteoModule,
+    HttpModule
   ],
-  providers: [JuegoService],
+  providers: [
+    HttpService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

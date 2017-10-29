@@ -10,8 +10,8 @@ import { AgilidadAritmeticaComponent } from '../componentes/agilidad-aritmetica/
 import { AgudezaVisualComponent } from '../componentes/agudeza-visual/agudeza-visual.component';
 import { AnagramaComponent } from '../componentes/anagrama/anagrama.component';
 import { PpotComponent } from '../componentes/ppot/ppot.component';
-import { ListadoComponent } from'../componentes/listado/listado.component';
-import { ListadoResultadosComponent } from '../componentes/listado-resultados/listado-resultados.component';
+import { RankingComponent } from'../componentes/ranking/ranking.component';
+import { DetalleComponent } from '../componentes/detalle/detalle.component';
 import { RegistroComponent } from '../componentes/registro/registro.component';
 import { JuegosComponent } from '../componentes/juegos/juegos.component';
 
@@ -25,7 +25,8 @@ const MiRuteo = [
   {path: 'agudeza' , component: AgudezaVisualComponent},
   {path: 'anagrama' , component: AnagramaComponent},
   {path: 'ppot' , component: PpotComponent},
-  {path: 'listados' , component: ListadoComponent},
+  {path: 'ranking' , component: RankingComponent},
+  {path: 'detalle' , component: DetalleComponent},
   {path: 'inicial' , component: InicialComponent},
   {path: 'error' , component: ErrorComponent},
   {path: '**' , component: ErrorComponent}

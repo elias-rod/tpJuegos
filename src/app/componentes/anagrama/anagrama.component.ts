@@ -51,9 +51,7 @@ export class AnagramaComponent implements OnInit {
 
   resetearFormulario() {
     this.juegoForm.reset();
-    setTimeout(function(){
-      document.getElementById("respuestaInput").focus();
-    }, 0);
+    document.getElementById("respuestaInput").focus();
     (<HTMLInputElement>document.getElementById("respuestaInput")).disabled = false;
   }
 
@@ -86,5 +84,8 @@ export class AnagramaComponent implements OnInit {
         textoBotonPrimario: 'Nueva partida'
       }
     }
+    setTimeout(function(){
+      document.getElementById("botonPrimario").focus();
+    }, 0);
   }
 }

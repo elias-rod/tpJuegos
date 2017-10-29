@@ -27,13 +27,13 @@
                         <h2 align="center">{{mensajeResultado?.titulo}}</h2>
                         <div class="media">
                             <div class="media-left">
-                                <img id="carita" [src]="mensajeResultado.imagenPath" class="media-object">
+                                <img id="carita" [src]="mensajeResultado?.imagenPath" class="media-object">
                             </div>
                             <div class="media-body">
                                 <h4 class="media-heading">{{mensajeResultado?.subtitulo}}</h4>
                                 <p>{{mensajeResultado?.parrafo}}</p>
                                 <button type="button" class="btn btn-default" routerLink="/juegos">{{mensajeResultado?.textoBotonSecundario}}</button>
-                                <button type="button" class="btn btn-primary" (click)="accion(mensajeResultado?.tipo)">{{mensajeResultado?.textoBotonPrimario}}</button>
+                                <button type="button" id="botonPrimario" class="btn btn-primary" (click)="accion(mensajeResultado?.tipo)">{{mensajeResultado?.textoBotonPrimario}}</button>
                             </div>
                         </div>
                     </div>
