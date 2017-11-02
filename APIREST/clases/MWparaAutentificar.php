@@ -1,110 +1,89 @@
 <?php
-
 require_once "AutentificadorJWT.php";
+
 class MWparaAutentificar
 {
- 	/**
-	* @api {any} /MWparaAutenticar/  Verificar Usuario
-	* @apiVersion 0.1.0
-	* @apiName VerificarUsuario
-	* @apiGroup MIDDLEWARE
-	* @apiDescription  Por medio de este MiddleWare verifico las credeciales antes de ingresar al correspondiente metodo 
-	*
-	* @apiParam {ServerRequestInterface} request  El objeto REQUEST.
- 	* @apiParam {ResponseInterface} response El objeto RESPONSE.
-	* @apiParam {Callable} next  The next middleware callable.
-	*
-	* @apiExample Como usarlo:
-	*    ->add(\MWparaAutenticar::class . ':VerificarUsuario')
-	*/
 	public function VerificarUsuario($request, $response, $next) {
-		$operacion = $request->getParsedBody()['operacion'];
-		$token = $request->getParsedBody()['token'];
-		$permitido = false;
-		$permisos = [
-			'usuarios' => [
-				1 => [//administrador
-					'get' => true,
-					'post' => true,
-					'put' => true,
-					'delete' => true
-				],
-				2 => [//comprador
-					'get' => true,
-					'post' => false,
-					'put' => false,
-					'delete' => false
-				],
-				3 => [//vendedor
-					'get' => true,
-					'post' => true,
-					'put' => true,
-					'delete' => false
-				]
-			]
-		];
-
-		try
+		$objDelaRespuesta = new stdclass();
+		$objDelaRespuesta->respuesta = "";
+	   
+		if($request->isGet())
 		{
-			AutentificadorJWT::VerificarToken($token);
-			$idRol = AutentificadorJWT::ObtenerData($token)->idRol;
+			// $response->getBody()->write('<p>NO necesita credenciales para los get </p>');
+			$response = $next($request, $response);
 		}
+		else
+		{
+			//$response->getBody()->write('<p>verifico credenciales</p>');
 
-		catch (Exception $e) {
-			return $response->withJson($e->getMessage());
-		}
+			//perfil=Profesor (GET, POST)
+			//$datos = array('usuario' => 'rogelio@agua.com','perfil' => 'profe', 'alias' => "PinkBoy");
+			
+			//perfil=Administrador(todos)
+			$datos = array('usuario' => 'rogelio@agua.com', 'perfil' => 'Administrador', 'alias' => "PinkBoy");
+			
+			$token = AutentificadorJWT::CrearToken($datos);
 
-		switch ($request->getMethod()) {
-			case 'GET':
-				if($permisos[$operacion][$idRol]['get']){
-					$permitido = true;
+			//token vencido
+			//$token="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE0OTc1Njc5NjUsImV4cCI6MTQ5NzU2NDM2NSwiYXVkIjoiNGQ5ODU5ZGU4MjY4N2Y0YzEyMDg5NzY5MzQ2OGFhNzkyYTYxNTMwYSIsImRhdGEiOnsidXN1YXJpbyI6InJvZ2VsaW9AYWd1YS5jb20iLCJwZXJmaWwiOiJBZG1pbmlzdHJhZG9yIiwiYWxpYXMiOiJQaW5rQm95In0sImFwcCI6IkFQSSBSRVNUIENEIDIwMTcifQ.GSpkrzIp2UbJWNfC1brUF_O4h8PyqykmW18vte1bhMw";
+
+			//token error
+			//$token="octavioAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE0OTc1Njc5NjUsImV4cCI6MTQ5NzU2NDM2NSwiYXVkIjoiNGQ5ODU5ZGU4MjY4N2Y0YzEyMDg5NzY5MzQ2OGFhNzkyYTYxNTMwYSIsImRhdGEiOnsidXN1YXJpbyI6InJvZ2VsaW9AYWd1YS5jb20iLCJwZXJmaWwiOiJBZG1pbmlzdHJhZG9yIiwiYWxpYXMiOiJQaW5rQm95In0sImFwcCI6IkFQSSBSRVNUIENEIDIwMTcifQ.GSpkrzIp2UbJWNfC1brUF_O4h8PyqykmW18vte1bhMw";
+	
+			//tomo el token del header
+			/*
+				$arrayConToken = $request->getHeader('token');
+				$token=$arrayConToken[0];			
+			*/
+			//var_dump($token);
+			$objDelaRespuesta->esValido = true; 
+			try 
+			{
+				//$token="";
+				AutentificadorJWT::verificarToken($token);
+				$objDelaRespuesta->esValido = true;      
+			}
+			catch (Exception $e) {      
+				//guardar en un log
+				$objDelaRespuesta->excepcion = $e->getMessage();
+				$objDelaRespuesta->esValido = false;     
+			}
+
+			if($objDelaRespuesta->esValido)
+			{						
+				if($request->isPost())
+				{		
+					// el post sirve para todos los logeados			    
 					$response = $next($request, $response);
 				}
-				break;
-			case 'POST':
-				if($permisos[$operacion][$idRol]['post']){
-					$permitido = true;
-					$response = $next($request, $response);
-				}
-				break;
-			case 'PUT':
-				if($permisos[$operacion][$idRol]['put']){
-					$permitido = true;
-					$response = $next($request, $response);
-				}
-				break;
-			case 'DELETE':
-				if($permisos[$operacion][$idRol]['delete']){
-					$permitido = true;
-					$response = $next($request, $response);
-				}
-				break;
-			default:
-				return $response->withJson('La operación que desea realizar no está contemplada.');
+				else
+				{
+					$payload = AutentificadorJWT::ObtenerData($token);
+					//var_dump($payload);
+					// DELETE,PUT y DELETE sirve para todos los logeados y admin
+					if($payload->perfil == "Administrador")
+					{
+						$response = $next($request, $response);
+					}		           	
+					else
+					{	
+						$objDelaRespuesta->respuesta = "Solo administradores";
+					}
+				}		          
+			}    
+			else
+			{
+				//   $response->getBody()->write('<p>no tenes habilitado el ingreso</p>');
+				$objDelaRespuesta->respuesta = "Solo usuarios registrados";
+				$objDelaRespuesta->elToken = $token;
+
+			}  
+		}		  
+		if($objDelaRespuesta->respuesta != "")
+		{
+			return $response->withJson($objDelaRespuesta, 401);
 		}
-		if(!$permitido){
-			return $response->withJson('No tiene permiso para realizar esta operación');
-		}
-		return $response;
+		//$response->getBody()->write('<p>vuelvo del verificador de credenciales</p>');
+		return $response;   
 	}
 }
-
-		/*
-		PARA CREAR TOKEN
-
-		$parametros = $request->getParsedBody();
-		$datos = array(//Se excluye la contraseña
-			'id' => $parametros['id'],
-			'nombre' => $parametros['nombre'],
-			'apellido' => $parametros['apellido'],
-			'email' => $parametros['email'],
-			'alias' => $parametros['alias'],
-			'habilitado' => $parametros['habilitado'],
-			'idRol' => $parametros['idRol']
-		);
-		$token = AutentificadorJWT::CrearToken($datos);
-
-		//tomo el token del header
-			$arrayConToken = $request->getHeader('token');
-			$token=$arrayConToken[0];
-		*/

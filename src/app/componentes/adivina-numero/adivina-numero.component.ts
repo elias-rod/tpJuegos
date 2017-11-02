@@ -1,6 +1,9 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
+
 import { AdivinaNumero } from '../../clases/adivina-numero';
+import { HttpService } from '../../servicios/http.service';
+
 declare var $: any;
 @Component({
   selector: 'app-adivina-numero',
@@ -12,8 +15,11 @@ export class AdivinaNumeroComponent implements OnInit {
   juegoForm: FormGroup;
   mensajeResultado: object;
   mostrarMensajeResultado: boolean;
-  
-  constructor(private formBuilder:FormBuilder) {
+  rutaAPI: string = "https://tp2017utn.000webhostapp.com/index.php/consultaJugadas/crear";
+  usuarioActual;
+
+  constructor(private formBuilder:FormBuilder, public httpService: HttpService ) {
+    this.usuarioActual = JSON.parse(localStorage.getItem('usuarioActual'));
     this.juegoForm = this.formBuilder.group({
       'respuesta': [null, Validators.compose([Validators.required, Validators.maxLength(2)])]
     });
@@ -58,6 +64,7 @@ export class AdivinaNumeroComponent implements OnInit {
         textoBotonSecundario: 'Jugar otros juegos',
         textoBotonPrimario: 'Nueva partida'
       }
+      this.guardarJugada('gano');
     }
     else if (resultado === 'perdio') {
       this.mensajeResultado = {
@@ -70,6 +77,7 @@ export class AdivinaNumeroComponent implements OnInit {
         textoBotonSecundario: 'Jugar otros juegos',
         textoBotonPrimario: 'Nueva partida'
       }
+      this.guardarJugada('perdio');
     }
     else if (resultado === 'continua'){
       this.juego.generarPista();
@@ -87,5 +95,20 @@ export class AdivinaNumeroComponent implements OnInit {
     setTimeout(function(){
       document.getElementById("botonPrimario").focus();
     }, 0);
+  }
+  guardarJugada(gano){
+    this.httpService.crear(this.rutaAPI, {
+    "idUsuario": this.usuarioActual.id,
+    "idJuego": this.juego.id,
+    "momento": Date.now(),
+    "gano": gano === 'gano'? 1 : 0,
+    "puntos": this.juego.puntos
+    })
+    .then(datos => {
+//aca tengo que actualizar los puntos del observable para que actualize el menu puntos
+    })
+    .catch(error => {
+      console.log(error);
+    });
   }
 }

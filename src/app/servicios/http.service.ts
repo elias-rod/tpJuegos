@@ -5,7 +5,9 @@ import 'rxjs/add/operator/toPromise';
 @Injectable()
 export class HttpService {
 
-  constructor(public http: Http) { }
+  constructor(public http: Http, public opcionesPost: RequestOptions) {
+    opcionesPost = new RequestOptions({ headers: new Headers({ "Content-Type": "application/x-www-form-urlencoded" })});
+  }
   
   leer(ruta, id){
     return this.http.get(ruta + '?id=' + id)
@@ -28,15 +30,22 @@ export class HttpService {
     .catch(this.manejarError);
   }
 
-  crear(ruta, cuerpo: any){
-    return this.http.post(ruta, cuerpo)
+  crear(ruta, cuerpo){
+    return this.http.post(ruta, JSON.stringify(cuerpo), this.opcionesPost)
     .toPromise()
     .then(this.extraerDato)
     .catch(this.manejarError);
   }
 
-  actualizar(ruta, cuerpo: any){
-    return this.http.post(ruta + 'actualizar', cuerpo)
+  actualizar(ruta, cuerpo){
+    return this.http.post(ruta + 'actualizar', JSON.stringify(cuerpo), this.opcionesPost)
+    .toPromise()
+    .then(this.extraerDato)
+    .catch(this.manejarError);
+  }
+
+  login(ruta, email, password){
+    return this.http.post(ruta, JSON.stringify({"email" : email, "password" : password}), this.opcionesPost)
     .toPromise()
     .then(this.extraerDato)
     .catch(this.manejarError);

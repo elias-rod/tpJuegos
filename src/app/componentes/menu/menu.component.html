@@ -22,9 +22,9 @@
                     <a routerLink="/ranking">Ranking</a>
                 </li>
             </ul>
-            <ul class="nav navbar-nav navbar-right">
-                <li><a routerLink="/detalle">Puntos <span class="label label-danger">5</span></a></li>
-                <li><a routerLink="/login"><span class="glyphicon glyphicon-log-in"></span> Ingresar</a></li>
+            <ul class="nav navbar-nav navbar-right" *ngIf="verificarLogueo()">
+                <li><a routerLink="/detalle">Puntos <span class="label label-danger">{{usuarioActual.puntos}}</span></a></li>
+                <li><a routerLink="/login"><span class="glyphicon glyphicon-log-in"></span> Salir</a></li>
             </ul>
         </div>
     </div>

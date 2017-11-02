@@ -35,7 +35,6 @@ export class AgilidadAritmeticaComponent implements OnInit {
       () => {
         if(this.juego.segundosRestantes == 0) {
           this.verificar();
-          //$("#modal").modal("show");borrar
           return;
         }
         else {

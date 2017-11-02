@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+
 import { HttpService } from '../../servicios/http.service';
 import { SpinnerComponent } from '../spinner/spinner.component';
-
 
 @Component({
   selector: 'app-detalle',
@@ -16,14 +16,14 @@ export class DetalleComponent implements OnInit {
   pathFotosServer: string = 'https://tp2017utn.000webhostapp.com/fotos/';
   rutaAPI: string = "https://tp2017utn.000webhostapp.com/index.php/consultaJugadas/";
 
-  constructor(public HttpService: HttpService) { }
+  constructor(public httpService: HttpService) { }
 
   ngOnInit() {
     this.leer();
   }
 
   leer(){
-    this.HttpService.leerTodosFiltrado(this.rutaAPI, this.jugador.id)
+    this.httpService.leerTodosFiltrado(this.rutaAPI, this.jugador.id)
     .then(datos => {
       let momento = new Date();
       for (var index = 0; index < datos.length; index++) {

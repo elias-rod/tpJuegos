@@ -8,6 +8,7 @@ import { AppComponent } from './app.component';
 import { RuteoModule } from './modulos/ruteo.module';
 
 import { HttpService } from './servicios/http.service';
+import { AuthGuard } from './servicios/auth.guard';
 
 import { LoginComponent } from './componentes/login/login.component';
 import { MenuComponent } from './componentes/menu/menu.component';
@@ -18,7 +19,6 @@ import { ErrorComponent } from './componentes/error/error.component';
 import { InicialComponent } from './componentes/inicial/inicial.component';
 import { RegistroComponent } from './componentes/registro/registro.component';
 import { JuegosComponent } from './componentes/juegos/juegos.component';
-import { ModalComponent } from './componentes/modal/modal.component';
 import { PpotComponent } from './componentes/ppot/ppot.component';
 import { AnagramaComponent } from './componentes/anagrama/anagrama.component';
 import { DetalleComponent } from './componentes/detalle/detalle.component';
@@ -39,7 +39,6 @@ import { SpinnerComponent } from './componentes/spinner/spinner.component';
     InicialComponent,
     RegistroComponent,
     JuegosComponent,
-    ModalComponent,
     PpotComponent,
     AnagramaComponent,
     DetalleComponent,
@@ -55,7 +54,8 @@ import { SpinnerComponent } from './componentes/spinner/spinner.component';
     HttpModule
   ],
   providers: [
-    HttpService
+    HttpService,
+    AuthGuard
   ],
   bootstrap: [AppComponent]
 })

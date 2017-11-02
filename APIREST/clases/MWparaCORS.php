@@ -4,19 +4,19 @@
 class MWparaCORS
 {
 	/**
-  * @api {any} /HabilitarCORSTodos/  HabilitarCORSTodos
-  * @apiVersion 0.1.0
-  * @apiName HabilitarCORSTodos
-  * @apiGroup MIDDLEWARE
-  * @apiDescription  Por medio de este MiddleWare habilito que se pueda acceder desde cualquier servidor
-  *
-  * @apiParam {ServerRequestInterface} request  El objeto REQUEST.
-  * @apiParam {ResponseInterface} response El objeto RESPONSE.
-  * @apiParam {Callable} next  The next middleware callable.
-  *
-  * @apiExample Como usarlo:
-  *   ->add(\verificador::class . ':HabilitarCORSTodos')
-  */
+   * @api {any} /HabilitarCORSTodos/  HabilitarCORSTodos
+   * @apiVersion 0.1.0
+   * @apiName HabilitarCORSTodos
+   * @apiGroup MIDDLEWARE
+   * @apiDescription  Por medio de este MiddleWare habilito que se pueda acceder desde cualquier servidor
+   *
+   * @apiParam {ServerRequestInterface} request  El objeto REQUEST.
+ * @apiParam {ResponseInterface} response El objeto RESPONSE.
+ * @apiParam {Callable} next  The next middleware callable.
+   *
+   * @apiExample Como usarlo:
+   *   ->add(\verificador::class . ':HabilitarCORSTodos')
+   */
 	public function HabilitarCORSTodos($request, $response, $next) {
 		/*
 		al ingresar no hago nada

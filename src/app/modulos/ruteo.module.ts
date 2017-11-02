@@ -15,19 +15,20 @@ import { DetalleComponent } from '../componentes/detalle/detalle.component';
 import { RegistroComponent } from '../componentes/registro/registro.component';
 import { JuegosComponent } from '../componentes/juegos/juegos.component';
 
+import { AuthGuard } from '../servicios/auth.guard';
+
 const MiRuteo = [
-  {path: '' , component: InicialComponent},
+  {path: '' , component: InicialComponent, canActivate: [AuthGuard]},
   {path: 'login' , component: LoginComponent},
   {path: 'registro' , component: RegistroComponent},
-  {path: 'juegos' , component: JuegosComponent},
-  {path: 'adivina' , component: AdivinaNumeroComponent},
-  {path: 'agilidad' , component: AgilidadAritmeticaComponent},
-  {path: 'agudeza' , component: AgudezaVisualComponent},
-  {path: 'anagrama' , component: AnagramaComponent},
-  {path: 'ppot' , component: PpotComponent},
-  {path: 'ranking' , component: RankingComponent},
-  {path: 'detalle' , component: DetalleComponent},
-  {path: 'inicial' , component: InicialComponent},
+  {path: 'juegos' , component: JuegosComponent, canActivate: [AuthGuard]},
+  {path: 'adivina' , component: AdivinaNumeroComponent, canActivate: [AuthGuard]},
+  {path: 'agilidad' , component: AgilidadAritmeticaComponent, canActivate: [AuthGuard]},
+  {path: 'agudeza' , component: AgudezaVisualComponent, canActivate: [AuthGuard]},
+  {path: 'anagrama' , component: AnagramaComponent, canActivate: [AuthGuard]},
+  {path: 'ppot' , component: PpotComponent, canActivate: [AuthGuard]},
+  {path: 'ranking' , component: RankingComponent, canActivate: [AuthGuard]},
+  {path: 'inicial' , component: InicialComponent, canActivate: [AuthGuard]},
   {path: 'error' , component: ErrorComponent},
   {path: '**' , component: ErrorComponent}
 ];

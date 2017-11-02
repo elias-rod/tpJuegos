@@ -7,6 +7,7 @@ export class Ppot extends Juego {
     constructor(jugador: string) {
         super(jugador);
         this.nombre = 'Piedra, papel o tijera';
+        this.id = 5;
         this.aciertosRestantes = 3;//para ganar
         this.vidas = 3;//para perder
     }

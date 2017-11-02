@@ -7,6 +7,7 @@ export class AgudezaVisual extends Juego {
     constructor(jugador: string) {
         super(jugador);
         this.nombre = 'Agudeza visual';
+        this.id = 3;
         this.color = [];
         this.aciertosRestantes = 3;//para ganar
         this.vidas = 3;//para perder

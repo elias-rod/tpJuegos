@@ -6,6 +6,7 @@ export class AdivinaNumero extends Juego {
     constructor(jugador: string) {
         super(jugador);
         this.nombre = 'Adivina el numero';
+        this.id = 1;
         this.vidas = 6;
     }
 

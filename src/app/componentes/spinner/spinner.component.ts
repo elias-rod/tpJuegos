@@ -11,5 +11,4 @@ export class SpinnerComponent implements OnInit {
 
   ngOnInit() {
   }
-  //document.getElementById("spinner").style.display = 'none';
 }

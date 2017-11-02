@@ -1,5 +1,6 @@
 export class Juego {
     nombre: string;
+    id: number;
     jugador: string;
     solucion: any;
     respuesta: any;
