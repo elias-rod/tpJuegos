@@ -18,10 +18,10 @@ class consultaJugada
 
     public static function Crear($request, $response) {
         try{
-            $parametros = $request->getParsedBody();
+            $parametros = json_decode($request->getBody(), true);
 
             $consulta = self::$objetoPDO->prepare(
-                "INSERT INTO jugadas (idUsuario, idJuego, fecha, hora, gano, puntos)
+                "INSERT INTO jugadas (idUsuario, idJuego, momento, gano, puntos)
                 VALUES (:idUsuario, :idJuego, :momento, :gano, :puntos)"
             );
             $consulta->bindValue(':idUsuario', $parametros['idUsuario'], PDO::PARAM_INT);
@@ -29,6 +29,22 @@ class consultaJugada
             $consulta->bindValue(':momento', $parametros['momento'], PDO::PARAM_STR);
             $consulta->bindValue(':gano', $parametros['gano'], PDO::PARAM_INT);
             $consulta->bindValue(':puntos', $parametros['puntos'], PDO::PARAM_INT);
+            $consulta->execute();
+
+            if($parametros['gano'] == 1){
+                $ganadas = 1;
+                $perdidas = 0;
+            }
+            else{
+                $ganadas = 0;
+                $perdidas = 1;
+            }
+            $consulta = self::$objetoPDO->prepare(
+                "UPDATE resumenjugadas
+                SET puntos = puntos + " . $parametros['puntos'] . ", jugadas = jugadas + 1, ganadas = ganadas + " . $ganadas .", perdidas = perdidas + " . $perdidas . " WHERE jugadorId = :idUsuario"
+            );
+            $consulta->bindValue(':idUsuario', $parametros['idUsuario'], PDO::PARAM_INT);
+            
             $consulta->execute();
 
             return $response->withJson(true);

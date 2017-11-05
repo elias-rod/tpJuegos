@@ -1,3 +1,6 @@
+<app-detalle [jugador]="jugadorActual" (detalleCerro)="muestraDetalle = false" *ngIf="muestraDetalle"></app-detalle>
+<app-autor (detalleCerro)="muestraAutor = false" *ngIf="muestraAutor"></app-autor>
+
 <nav class="navbar navbar-inverse transparent">
     <div class="container-fluid">
         <div class="navbar-header">
@@ -22,9 +25,10 @@
                     <a routerLink="/ranking">Ranking</a>
                 </li>
             </ul>
-            <ul class="nav navbar-nav navbar-right" *ngIf="verificarLogueo()">
-                <li><a routerLink="/detalle">Puntos <span class="label label-danger">{{usuarioActual.puntos}}</span></a></li>
-                <li><a routerLink="/login"><span class="glyphicon glyphicon-log-in"></span> Salir</a></li>
+            <ul class="nav navbar-nav navbar-right">
+                <li *ngIf="muestraDatosLogueo"><a (click)="mostrarDetalle()" data-toggle="modal" data-target="#detalle" data-backdrop="static" data-keyboard="false" style="cursor:pointer;">Puntos <span class="label label-danger">{{jugadorActual.puntos}}</span></a></li>
+                <li *ngIf="muestraDatosLogueo"><a (click)="muestraDatosLogueo = false" routerLink="/login"><span class="glyphicon glyphicon-log-in"></span> Salir</a></li>
+                <li><a (click)="mostrarAutor()" data-toggle="modal" data-target="#autor" data-backdrop="static" data-keyboard="false" style="cursor:pointer;"> Sobre el autor </a></li>
             </ul>
         </div>
     </div>

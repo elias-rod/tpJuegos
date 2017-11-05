@@ -3,8 +3,10 @@ import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 
 import { AdivinaNumero } from '../../clases/adivina-numero';
 import { HttpService } from '../../servicios/http.service';
+import { ActualizacionusuarioService } from '../../servicios/actualizacionusuario.service';
 
 declare var $: any;
+
 @Component({
   selector: 'app-adivina-numero',
   templateUrl: './adivina-numero.component.html',
@@ -15,11 +17,8 @@ export class AdivinaNumeroComponent implements OnInit {
   juegoForm: FormGroup;
   mensajeResultado: object;
   mostrarMensajeResultado: boolean;
-  rutaAPI: string = "https://tp2017utn.000webhostapp.com/index.php/consultaJugadas/crear";
-  usuarioActual;
 
-  constructor(private formBuilder:FormBuilder, public httpService: HttpService ) {
-    this.usuarioActual = JSON.parse(localStorage.getItem('usuarioActual'));
+  constructor(private formBuilder:FormBuilder, public httpService: HttpService, public actualizacionusuarioService: ActualizacionusuarioService ) {
     this.juegoForm = this.formBuilder.group({
       'respuesta': [null, Validators.compose([Validators.required, Validators.maxLength(2)])]
     });
@@ -30,7 +29,7 @@ export class AdivinaNumeroComponent implements OnInit {
   }
 
   generarNuevo() {
-    this.juego = new AdivinaNumero('Pedro');
+    this.juego = new AdivinaNumero();
     this.juego.generarSolucion();
   }
 
@@ -96,9 +95,16 @@ export class AdivinaNumeroComponent implements OnInit {
       document.getElementById("botonPrimario").focus();
     }, 0);
   }
+  
   guardarJugada(gano){
-    this.httpService.crear(this.rutaAPI, {
-    "idUsuario": this.usuarioActual.id,
+    let usuarioActual = JSON.parse(localStorage.getItem('usuarioActual'));
+    usuarioActual.puntos = usuarioActual.puntos + this.juego.puntos;
+    usuarioActual.jugadas += 1;
+    gano === 'gano'? usuarioActual.ganadas += 1 : usuarioActual.perdidas += 1;
+    localStorage.setItem('usuarioActual', JSON.stringify(usuarioActual));
+    this.actualizacionusuarioService.actualizarObservable();
+    this.httpService.crear(this.juego.rutaAPI, {
+    "idUsuario": this.juego.usuarioActual.id,
     "idJuego": this.juego.id,
     "momento": Date.now(),
     "gano": gano === 'gano'? 1 : 0,

@@ -3,9 +3,8 @@ import { Juego } from './juego';
 export class AdivinaNumero extends Juego {
     pista: string;
 
-    constructor(jugador: string) {
-        super(jugador);
-        this.nombre = 'Adivina el numero';
+    constructor() {
+        super();
         this.id = 1;
         this.vidas = 6;
     }

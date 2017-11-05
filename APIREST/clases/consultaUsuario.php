@@ -1,5 +1,5 @@
 <?php
-
+require_once "AutentificadorJWT.php";
 class consultaUsuario
 {
     private static $objetoPDO;
@@ -16,13 +16,60 @@ class consultaUsuario
         }
     }
 
+    public static function Login($request, $response, $args) {
+        $parametros = json_decode($request->getBody(), true);
+        $consulta = self::$objetoPDO->prepare(
+            "SELECT usuarios.*, resumenjugadas.puntos, resumenjugadas.jugadas, resumenjugadas.ganadas, resumenjugadas.perdidas
+            FROM usuarios, resumenjugadas
+            WHERE usuarios.email = :email
+                AND usuarios.password = :password
+                AND usuarios.id = resumenjugadas.jugadorId
+                AND usuarios.habilitado = 1"
+        );
+        $consulta->bindValue(':email', $parametros['email'], PDO::PARAM_STR);
+        $consulta->bindValue(':password', $parametros['password'], PDO::PARAM_STR);
+        $consulta->execute();
+        $usuario = $consulta->fetch(PDO::FETCH_ASSOC);
+        if (!$usuario) {
+            return $response->withJson(["respuesta" => 'Usuario inexistente']);
+        }
+        $usuario['token'] = AutentificadorJWT::CrearToken($usuario);
+        return $response->withJson($usuario);
+    }
+
     public static function Crear($request, $response) {
         try{
-            $parametros = $request->getParsedBody();
+            $parametros = $request->getParams();
+            //VERIFICACION CONTRA USUARIO DUPLICADO
+            $consulta = self::$objetoPDO->prepare(
+                "SELECT *
+                FROM usuarios
+                WHERE email = :email OR alias = :alias"
+            );
+            $consulta->bindValue(':email', $parametros['email'], PDO::PARAM_STR);
+            $consulta->bindValue(':alias', $parametros['alias'], PDO::PARAM_STR);
+            $consulta->execute();
+
+            $usuario = $consulta->fetch(PDO::FETCH_ASSOC);
+            if ($usuario) {
+                return $response->withJson(["respuesta" => 'Email o alias ocupado']);
+            }
+            
+            //IMAGEN-------------------------------------------------------
+            //VALIDACION DEL TAMAÑO DE LA IMAGEN
+            if ($_FILES['foto']['size'] > (1  * 1024 * 1024)) { //1MB
+                return $response->withJson(["respuesta" => 'Cambie la imagen, solo se permiten tamaños imagenes de tamaño inferior a 1 MB']);
+            }
+            //VALIDACION DE TIPO DE IMAGEN MEDIANTE EL INTENTO DE PROCESARLA COMO IMAGEN, SI IMAGENINICIAL ES FALSE, FALLO LA VALIDACION
+            else if(!($imagenInicial = imagecreatefromstring(file_get_contents($_FILES['foto']['tmp_name'])))) {
+                return $response->withJson(["respuesta" => 'Cambie la imagen, sólo se permiten imágenes con extensión .jpg .jpeg .bmp .gif o .png']);
+            }
+            //---------------------------------------------------------------
+            
             //CREACIÓN DEL USUARIO
             $consulta = self::$objetoPDO->prepare(
-                "INSERT INTO usuarios (nombre, apellido, email, password, alias, habilitado, puntos)
-                VALUES (:nombre, :apellido, :email, :password, :alias, 1, 0)"
+                "INSERT INTO usuarios (nombre, apellido, email, password, alias, habilitado)
+                VALUES (:nombre, :apellido, :email, :password, :alias, 1)"
             );
             $consulta->bindValue(':nombre', $parametros['nombre'], PDO::PARAM_STR);
             $consulta->bindValue(':apellido', $parametros['apellido'], PDO::PARAM_STR);
@@ -31,24 +78,44 @@ class consultaUsuario
             $consulta->bindValue(':alias', $parametros['alias'], PDO::PARAM_STR);
             $consulta->execute();
 
+            $idUsuario = self::$objetoPDO->lastInsertId();
+
+            //CREACIÓN DEL RESUMEN DE JUGADAS
+            $consulta = self::$objetoPDO->prepare(
+                "INSERT INTO resumenjugadas (jugadorId, puntos, jugadas, ganadas, perdidas)
+                VALUES (:jugadorId, 0, 0, 0, 0)"
+            );
+            $consulta->bindValue(':jugadorId', $idUsuario, PDO::PARAM_STR);
+            $consulta->execute();
+
             //CREACIÓN DEL ROL
             $consulta = self::$objetoPDO->prepare(
                 "INSERT INTO roles (idRol, idUsuario)
                 VALUES (:idRol, :idUsuario)"
             );
             $consulta->bindValue(':idRol', $parametros['idRol'], PDO::PARAM_STR);
-            $consulta->bindValue(':idUsuario', self::$objetoPDO->lastInsertId(), PDO::PARAM_STR);
+            $consulta->bindValue(':idUsuario', $idUsuario, PDO::PARAM_STR);
             $consulta->execute();
-
+            
+            //CONTINUACION DE CREACION DE IMAGEN-------------------------------------
+            //OBTENCION DE LAS DIMENSIONES DE LA IMAGEN INICIAL
+            $imagenInicialAncho = imagesx($imagenInicial);
+            $imagenInicialAlto = imagesy($imagenInicial);
+            //CREACION DE UNA IMAGEN VACIA CON LAS DIMENSIONES DE LA IMAGEN INCIAL
+            $imagenFinal = imagecreatetruecolor($imagenInicialAncho, $imagenInicialAlto);
+            //COPIA DE LA IMAGEN INCIAL EN LA FINAL
+            imagecopy($imagenFinal, $imagenInicial, 0, 0, 0, 0, $imagenInicialAncho, $imagenInicialAlto);
+            //LIBERACION DE LA MEMORIA DE LA IMAGEN INICIAL
+            imagedestroy($imagenInicial);
+            //GUARDADO DEFINITIVO DE LA IMAGEN EN EL SERVIDOR CONVIRTIENDOLA EN FORMATO PNG
+            imagepng($imagenFinal, 'fotos/' . $idUsuario . '.png');
+            //LIBERACION DE LA MEMORIA DE LA IMAGEN FINAL
+            imagedestroy($imagenFinal);
+            //-----------------------------------------------------------------------------
             return $response->withJson(true);
         }
         catch(Exception $e){
-            if($e->getCode() === '23000'){
-                return $response->withJson('Usuario con e-mail duplicado.');
-            }
-            else{
-                return $response->withJson($e->getMessage());   
-            }
+            return $response->withJson($e->getMessage());   
         }
     }
 

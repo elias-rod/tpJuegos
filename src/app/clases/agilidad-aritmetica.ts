@@ -8,9 +8,8 @@ export class AgilidadAritmetica extends Juego{
     segundosMax: number;
     segundosRestantes: number;
     
-    constructor(jugador: string) {
-        super(jugador);
-        this.nombre = 'Agilidad aritmetica';
+    constructor() {
+        super();
         this.id = 2;
         this.aciertosRestantes = 3;//para ganar
         this.vidas = 3;

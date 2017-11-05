@@ -1,0 +1,11 @@
+.avatar{
+    height: 150px;
+    width: 125px;
+}
+
+.github{
+    float: left;
+    margin-right:5px;
+    height: 16px;
+    width: 16px;
+}

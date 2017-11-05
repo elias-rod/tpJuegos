@@ -4,9 +4,8 @@ export class AgudezaVisual extends Juego {
     color: string[];
     aciertosRestantes: number;
 
-    constructor(jugador: string) {
-        super(jugador);
-        this.nombre = 'Agudeza visual';
+    constructor() {
+        super();
         this.id = 3;
         this.color = [];
         this.aciertosRestantes = 3;//para ganar

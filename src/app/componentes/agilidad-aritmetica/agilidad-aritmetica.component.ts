@@ -1,6 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
+
 import { AgilidadAritmetica } from '../../clases/agilidad-aritmetica';
+import { HttpService } from '../../servicios/http.service';
+import { ActualizacionusuarioService } from '../../servicios/actualizacionusuario.service';
 
 declare var $: any;
 
@@ -9,7 +12,7 @@ declare var $: any;
   templateUrl: './agilidad-aritmetica.component.html',
   styleUrls: ['./agilidad-aritmetica.component.css']
 })
-export class AgilidadAritmeticaComponent implements OnInit {
+export class AgilidadAritmeticaComponent implements OnInit, OnDestroy {
 
   juego: AgilidadAritmetica;
   juegoForm: FormGroup;
@@ -19,7 +22,7 @@ export class AgilidadAritmeticaComponent implements OnInit {
   colorBarra: string = '';
   minutero;
 
-  constructor(private formBuilder:FormBuilder) {
+  constructor(private formBuilder:FormBuilder, public httpService: HttpService, public actualizacionusuarioService: ActualizacionusuarioService ) {
     this.juegoForm = this.formBuilder.group({
       'respuesta': [null, Validators.compose([Validators.required, Validators.maxLength(4)])]
     });
@@ -29,6 +32,12 @@ export class AgilidadAritmeticaComponent implements OnInit {
   ngOnInit() {
   }
 
+  ngOnDestroy(){
+    if(this.minutero){
+      clearInterval(this.minutero);
+    }
+  }
+  
   iniciarCuentaRegresiva() {
     this.juego.segundosRestantes = this.juego.segundosMax + 1;
     this.minutero = setInterval(
@@ -55,7 +64,7 @@ export class AgilidadAritmeticaComponent implements OnInit {
   }
   
   generarNuevo() {
-    this.juego = new AgilidadAritmetica('Pedro');
+    this.juego = new AgilidadAritmetica();
     this.juego.generarSolucion();
     this.iniciarCuentaRegresiva();
   }
@@ -95,6 +104,7 @@ export class AgilidadAritmeticaComponent implements OnInit {
         textoBotonSecundario: 'Jugar otros juegos',
         textoBotonPrimario: 'Nueva partida'
       }
+      this.guardarJugada('gano');
     }
     else if (intento === 'perdio') {
       this.mensajeResultado = {
@@ -107,6 +117,7 @@ export class AgilidadAritmeticaComponent implements OnInit {
         textoBotonSecundario: 'Jugar otros juegos',
         textoBotonPrimario: 'Nueva partida'
       }
+      this.guardarJugada('perdio');
     }
     else if (intento == 'acerto') {
       this.mensajeResultado = {
@@ -135,5 +146,27 @@ export class AgilidadAritmeticaComponent implements OnInit {
     setTimeout(function(){
       document.getElementById("botonPrimario").focus();
     }, 0);
+  }
+
+  guardarJugada(gano){
+    let usuarioActual = JSON.parse(localStorage.getItem('usuarioActual'));
+    usuarioActual.puntos = usuarioActual.puntos + this.juego.puntos;
+    usuarioActual.jugadas += 1;
+    gano === 'gano'? usuarioActual.ganadas += 1 : usuarioActual.perdidas += 1;
+    localStorage.setItem('usuarioActual', JSON.stringify(usuarioActual));
+    this.actualizacionusuarioService.actualizarObservable();
+    this.httpService.crear(this.juego.rutaAPI, {
+    "idUsuario": this.juego.usuarioActual.id,
+    "idJuego": this.juego.id,
+    "momento": Date.now(),
+    "gano": gano === 'gano'? 1 : 0,
+    "puntos": this.juego.puntos
+    })
+    .then(datos => {
+//aca tengo que actualizar los puntos del observable para que actualize el menu puntos
+    })
+    .catch(error => {
+      console.log(error);
+    });
   }
 }

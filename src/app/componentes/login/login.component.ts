@@ -3,6 +3,8 @@ import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { HttpService } from '../../servicios/http.service';
 import { Router } from '@angular/router';
 
+import { ActualizacionusuarioService } from '../../servicios/actualizacionusuario.service';
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -12,11 +14,13 @@ export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   rutaAPI: string = "https://tp2017utn.000webhostapp.com/index.php/consultaUsuarios/login";
   mensajeError: boolean;
+  spinner: boolean;
 
   constructor(
   private formBuilder:FormBuilder,
   public HttpService: HttpService,
-  private router: Router) {
+  private router: Router,
+  public actualizacionusuarioService: ActualizacionusuarioService) {
     this.loginForm = this.formBuilder.group({
       'email': [null, Validators.compose([Validators.required, Validators.pattern(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)])],
       'password': [null, Validators.compose([Validators.required])]
@@ -29,14 +33,17 @@ export class LoginComponent implements OnInit {
   }
 
   login(){
+    this.spinner = true;
     this.HttpService.login(this.rutaAPI, this.loginForm.value.email, this.loginForm.value.password)
     .then(datos => {
-      if(datos.respuesta !== 'Usuario inexistente'){
-        localStorage.setItem('usuarioActual', JSON.stringify(datos));
-        this.router.navigate(['inicial']);
+      this.spinner = false;
+      if(datos.respuesta == 'Usuario inexistente'){
+        this.mensajeError = true;
       }
       else{
-        this.mensajeError = true;
+        localStorage.setItem('usuarioActual', JSON.stringify(datos));
+        this.actualizacionusuarioService.actualizarObservable();
+        this.router.navigate(['inicial']);
       }
     })
     .catch(error => {

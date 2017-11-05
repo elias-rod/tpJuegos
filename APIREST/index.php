@@ -9,25 +9,34 @@ require_once './clases/AutentificadorJWT.php';
 require_once './clases/MWparaCORS.php';
 require_once './clases/MWparaAutentificar.php';
 
-$config['displayErrorDetails'] = true;
-$config['addContentLengthHeader'] = false;
+$app = new Slim\App([
+  "settings"  => [
+      "displayErrorDetails" => true
+  ]
+]);
 
-$app = new \Slim\App(["settings" => $config]);
+$app->add(function ($req, $res, $next) {
+  $response = $next($req, $res);
+  return $response
+          ->withHeader('Access-Control-Allow-Origin', '*')
+          ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
+          ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+});
 
-
-/*LLAMADA A METODOS DE INSTANCIA DE UNA CLASE*/
-$app->group('/consultaUsuarios', function() {
-  $this->post('/crear', \consultaUsuario::class . ':Crear');
-  $this->get('/leer/{id}', \consultaUsuario::class . ':Leer');
-  $this->get('/leerTodos', \consultaUsuario::class . ':LeerTodos');
-  $this->get('/leerTodos/{criterio}/{sentido}', \consultaUsuario::class . ':LeerTodosOrdenado');
-  $this->post('/actualizar', \consultaUsuario::class . ':Actualizar');
-})->add(\MWparaCORS::class . ':HabilitarCORSTodos');
-//->add(\MWparaAutentificar::class . ':VerificarUsuario')//va primero que cors
-
+//Usuarios
+$app->post('/consultaUsuarios/login', \consultaUsuario::class . ':Login');
+$app->post('/consultaUsuarios/crear', \consultaUsuario::class . ':Crear');
+$app->get('/consultaUsuarios/leer/{id}', \consultaUsuario::class . ':Leer');
+$app->get('/consultaUsuarios/leerTodos', \consultaUsuario::class . ':LeerTodos');
+$app->get('/consultaUsuarios/leerTodos/{criterio}/{sentido}', \consultaUsuario::class . ':LeerTodosOrdenado');
+$app->post('/consultaUsuarios/actualizar', \consultaUsuario::class . ':Actualizar');
+//Jugadas
+$app->post('/consultaJugadas/crear', \consultaJugada::class . ':Crear');
+$app->get('/consultaJugadas/leerTodos/{criterio}', \consultaJugada::class . ':LeerTodosFiltrado');
+/*
 $app->group('/consultaJugadas', function() {
   $this->post('/crear', \consultaJugada::class . ':Crear');
   $this->get('/leerTodos/{criterio}', \consultaJugada::class . ':LeerTodosFiltrado');
 })->add(\MWparaAutentificar::class . ':VerificarUsuario')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
-
+*/
 $app->run();

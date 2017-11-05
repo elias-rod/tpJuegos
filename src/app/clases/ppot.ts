@@ -4,9 +4,8 @@ export class Ppot extends Juego {
     aciertosRestantes: number;
     eleccionIA: number;
 
-    constructor(jugador: string) {
-        super(jugador);
-        this.nombre = 'Piedra, papel o tijera';
+    constructor() {
+        super();
         this.id = 5;
         this.aciertosRestantes = 3;//para ganar
         this.vidas = 3;//para perder

@@ -6,7 +6,7 @@ import 'rxjs/add/operator/toPromise';
 export class HttpService {
 
   constructor(public http: Http, public opcionesPost: RequestOptions) {
-    opcionesPost = new RequestOptions({ headers: new Headers({ "Content-Type": "application/x-www-form-urlencoded" })});
+    opcionesPost = new RequestOptions({ headers: new Headers({ "Content-Type": "multipart/form-data" })});
   }
   
   leer(ruta, id){
@@ -31,7 +31,7 @@ export class HttpService {
   }
 
   crear(ruta, cuerpo){
-    return this.http.post(ruta, JSON.stringify(cuerpo), this.opcionesPost)
+    return this.http.post(ruta, cuerpo, this.opcionesPost)
     .toPromise()
     .then(this.extraerDato)
     .catch(this.manejarError);

@@ -1,12 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+
 import { Ppot } from '../../clases/ppot';
+import { HttpService } from '../../servicios/http.service';
+import { ActualizacionusuarioService } from '../../servicios/actualizacionusuario.service';
 
 @Component({
   selector: 'app-ppot',
   templateUrl: './ppot.component.html',
   styleUrls: ['./ppot.component.css']
 })
-export class PpotComponent implements OnInit {
+export class PpotComponent implements OnInit, OnDestroy {
   juego: Ppot;
   manos: Array<string>;
   pathImagenIA: string;
@@ -15,7 +18,7 @@ export class PpotComponent implements OnInit {
   minutero;
   index: number;
 
-  constructor() {
+  constructor(public httpService: HttpService, public actualizacionusuarioService: ActualizacionusuarioService) {
     this.manos = ['./assets/piedra.png', './assets/papel.png', './assets/tijera.png'];
     this.index = 0;
     this.generarNuevo();
@@ -25,8 +28,14 @@ export class PpotComponent implements OnInit {
     this.generarAnimacion('manoIA', 'wobble');
   }
 
+  ngOnDestroy(){
+    if(this.minutero){
+      clearInterval(this.minutero);
+    }
+  }
+
   generarNuevo() {
-    this.juego = new Ppot('Pedro');
+    this.juego = new Ppot();
     this.juego.generarSolucion();
     this.pathImagenIA = this.manos[this.juego.eleccionIA];
     this.mostrarMensajeResultado = false;
@@ -82,6 +91,7 @@ export class PpotComponent implements OnInit {
         textoBotonSecundario: 'Jugar otros juegos',
         textoBotonPrimario: 'Nueva partida'
       }
+      this.guardarJugada('gano');
     }
     else if (intento === 'perdio') {
       this.mensajeResultado = {
@@ -94,6 +104,7 @@ export class PpotComponent implements OnInit {
         textoBotonSecundario: 'Jugar otros juegos',
         textoBotonPrimario: 'Nueva partida'
       }
+      this.guardarJugada('perdio');
     }
     else if (intento == 'acerto') {
       this.mensajeResultado = {
@@ -131,5 +142,27 @@ export class PpotComponent implements OnInit {
         textoBotonPrimario: 'Continuar'
       }
     }
+  }
+
+  guardarJugada(gano){
+    let usuarioActual = JSON.parse(localStorage.getItem('usuarioActual'));
+    usuarioActual.puntos = usuarioActual.puntos + this.juego.puntos;
+    usuarioActual.jugadas += 1;
+    gano === 'gano'? usuarioActual.ganadas += 1 : usuarioActual.perdidas += 1;
+    localStorage.setItem('usuarioActual', JSON.stringify(usuarioActual));
+    this.actualizacionusuarioService.actualizarObservable();
+    this.httpService.crear(this.juego.rutaAPI, {
+    "idUsuario": this.juego.usuarioActual.id,
+    "idJuego": this.juego.id,
+    "momento": Date.now(),
+    "gano": gano === 'gano'? 1 : 0,
+    "puntos": this.juego.puntos
+    })
+    .then(datos => {
+//aca tengo que actualizar los puntos del observable para que actualize el menu puntos
+    })
+    .catch(error => {
+      console.log(error);
+    });
   }
 }

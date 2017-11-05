@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+
 import { AgudezaVisual } from '../../clases/agudeza-visual';
+import { HttpService } from '../../servicios/http.service';
+import { ActualizacionusuarioService } from '../../servicios/actualizacionusuario.service';
 
 declare var $: any;
 
@@ -15,8 +18,8 @@ export class AgudezaVisualComponent implements OnInit {
   mensajeResultado: object;
   mostrarMensajeResultado: boolean;
 
-  constructor() {
-    this.juego = new AgudezaVisual('Elias');
+  constructor(public httpService: HttpService, public actualizacionusuarioService: ActualizacionusuarioService) {
+    this.juego = new AgudezaVisual();
     this.juego.generarSolucion();
   }
 
@@ -38,7 +41,7 @@ export class AgudezaVisualComponent implements OnInit {
   }
 
   generarNuevo() {
-    this.juego = new AgudezaVisual('Pedro');
+    this.juego = new AgudezaVisual();
     this.juego.generarSolucion();
     this.mostrarMensajeResultado = false;
   }
@@ -81,6 +84,7 @@ export class AgudezaVisualComponent implements OnInit {
         textoBotonSecundario: 'Jugar otros juegos',
         textoBotonPrimario: 'Nueva partida'
       }
+      this.guardarJugada('gano');
     }
     else if (intento === 'perdio') {
       this.mensajeResultado = {
@@ -93,6 +97,7 @@ export class AgudezaVisualComponent implements OnInit {
         textoBotonSecundario: 'Jugar otros juegos',
         textoBotonPrimario: 'Nueva partida'
       }
+      this.guardarJugada('perdio');
     }
     else if (intento === 'acerto') {
       this.mensajeResultado = {
@@ -118,5 +123,27 @@ export class AgudezaVisualComponent implements OnInit {
         textoBotonPrimario: 'Continuar'
       }
     }
+  }
+
+  guardarJugada(gano){
+    let usuarioActual = JSON.parse(localStorage.getItem('usuarioActual'));
+    usuarioActual.puntos = usuarioActual.puntos + this.juego.puntos;
+    usuarioActual.jugadas += 1;
+    gano === 'gano'? usuarioActual.ganadas += 1 : usuarioActual.perdidas += 1;
+    localStorage.setItem('usuarioActual', JSON.stringify(usuarioActual));
+    this.actualizacionusuarioService.actualizarObservable();
+    this.httpService.crear(this.juego.rutaAPI, {
+    "idUsuario": this.juego.usuarioActual.id,
+    "idJuego": this.juego.id,
+    "momento": Date.now(),
+    "gano": gano === 'gano'? 1 : 0,
+    "puntos": this.juego.puntos
+    })
+    .then(datos => {
+//aca tengo que actualizar los puntos del observable para que actualize el menu puntos
+    })
+    .catch(error => {
+      console.log(error);
+    });
   }
 }

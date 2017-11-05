@@ -8,6 +8,7 @@ import { AppComponent } from './app.component';
 import { RuteoModule } from './modulos/ruteo.module';
 
 import { HttpService } from './servicios/http.service';
+import { ActualizacionusuarioService } from './servicios/actualizacionusuario.service';
 import { AuthGuard } from './servicios/auth.guard';
 
 import { LoginComponent } from './componentes/login/login.component';
@@ -25,6 +26,7 @@ import { DetalleComponent } from './componentes/detalle/detalle.component';
 import { RankingComponent } from './componentes/ranking/ranking.component';
 import { VictoriaPipe } from './pipes/victoria.pipe';
 import { SpinnerComponent } from './componentes/spinner/spinner.component';
+import { AutorComponent } from './componentes/autor/autor.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +46,8 @@ import { SpinnerComponent } from './componentes/spinner/spinner.component';
     DetalleComponent,
     RankingComponent,
     VictoriaPipe,
-    SpinnerComponent
+    SpinnerComponent,
+    AutorComponent
   ],
   imports: [
     BrowserModule,
@@ -55,7 +58,8 @@ import { SpinnerComponent } from './componentes/spinner/spinner.component';
   ],
   providers: [
     HttpService,
-    AuthGuard
+    AuthGuard,
+    ActualizacionusuarioService
   ],
   bootstrap: [AppComponent]
 })

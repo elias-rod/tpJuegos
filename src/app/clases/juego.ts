@@ -1,14 +1,15 @@
 export class Juego {
-    nombre: string;
     id: number;
-    jugador: string;
     solucion: any;
     respuesta: any;
     puntos: number;
     vidas: number;
+    rutaAPI: string;
+    usuarioActual: any;
 
-    constructor(jugador: string) {
-        this.jugador = jugador;
+    constructor() {
         this.puntos = 0;
+        this.rutaAPI = "https://tp2017utn.000webhostapp.com/index.php/consultaJugadas/crear";
+        this.usuarioActual = JSON.parse(localStorage.getItem('usuarioActual'));
     }
 }
