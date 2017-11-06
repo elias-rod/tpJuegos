@@ -14,6 +14,7 @@ import { RankingComponent } from'../componentes/ranking/ranking.component';
 import { DetalleComponent } from '../componentes/detalle/detalle.component';
 import { RegistroComponent } from '../componentes/registro/registro.component';
 import { JuegosComponent } from '../componentes/juegos/juegos.component';
+import { UsuarioComponent } from '../componentes/usuario/usuario.component';
 
 import { AuthGuard } from '../servicios/auth.guard';
 
@@ -29,6 +30,8 @@ const MiRuteo = [
   {path: 'ppot' , component: PpotComponent, canActivate: [AuthGuard]},
   {path: 'ranking' , component: RankingComponent, canActivate: [AuthGuard]},
   {path: 'inicial' , component: InicialComponent, canActivate: [AuthGuard]},
+  {path: 'usuario' , component: UsuarioComponent, canActivate: [AuthGuard]},
+  
   {path: 'error' , component: ErrorComponent},
   {path: '**' , component: ErrorComponent}
 ];

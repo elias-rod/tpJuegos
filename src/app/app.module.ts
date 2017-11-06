@@ -27,6 +27,7 @@ import { RankingComponent } from './componentes/ranking/ranking.component';
 import { VictoriaPipe } from './pipes/victoria.pipe';
 import { SpinnerComponent } from './componentes/spinner/spinner.component';
 import { AutorComponent } from './componentes/autor/autor.component';
+import { UsuarioComponent } from './componentes/usuario/usuario.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import { AutorComponent } from './componentes/autor/autor.component';
     RankingComponent,
     VictoriaPipe,
     SpinnerComponent,
-    AutorComponent
+    AutorComponent,
+    UsuarioComponent
   ],
   imports: [
     BrowserModule,
