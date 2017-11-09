@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 import { HttpService } from '../../servicios/http.service';
+import { RutasService } from '../../servicios/rutas.service'
 import { SpinnerComponent } from '../spinner/spinner.component';
 
 @Component({
@@ -13,10 +14,9 @@ export class DetalleComponent implements OnInit {
   @Output() detalleCerro = new EventEmitter();
   jugadas: Array<any>;
   random: number;
-  pathFotosServer: string = 'https://tp2017utn.000webhostapp.com/fotos/';
-  rutaAPI: string = "https://tp2017utn.000webhostapp.com/index.php/consultaJugadas/";
+  rutaAPI: string = this.RutasService.rutaAPI + "consultaJugadas/";
 
-  constructor(public httpService: HttpService) { }
+  constructor(public httpService: HttpService, public RutasService: RutasService) { }
 
   ngOnInit() {
     this.leer();

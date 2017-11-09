@@ -5,7 +5,7 @@
     <div class="col-md-10 col-md-offset-1">
         <div class="panel panel-default transparent">
           <div class="panel-heading text-center">
-            <h1>RANKING</h1><img class="avatar" src="./assets/copa.png">
+            <h1>RANKING</h1><img class="avatar" [src]="RutasService.rutaImagenesSitio + 'copa.png'">
           </div>
           <div class="panel-body">
             <table class="table table-striped">
@@ -21,7 +21,7 @@
               <tbody>
                 <tr *ngFor="let jugador of jugadores; index as i">
                   <td>{{ i + 1 }}</td>
-                  <td><img class="avatar" [src]="pathFotosServer + jugador.id + '.png?random=' + random"> {{ jugador.alias }}</td>
+                  <td><img class="avatar" [src]="RutasService.rutaFotosUsuarios + jugador.id + '.png?random=' + random"> {{ jugador.alias }}</td>
                   <td>{{ jugador.jugadas }}</td>
                   <td>{{ jugador.puntos }}</td>
                   <td><button type="button" class="btn btn-info" (click)="mostrarDetalle(jugador)" data-toggle="modal" data-target="#detalle" data-backdrop="static" data-keyboard="false">Detalle</button></td>

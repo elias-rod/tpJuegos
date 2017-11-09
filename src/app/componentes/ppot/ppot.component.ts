@@ -3,6 +3,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Ppot } from '../../clases/ppot';
 import { HttpService } from '../../servicios/http.service';
 import { ActualizacionusuarioService } from '../../servicios/actualizacionusuario.service';
+import { RutasService } from '../../servicios/rutas.service';
 
 @Component({
   selector: 'app-ppot',
@@ -17,9 +18,16 @@ export class PpotComponent implements OnInit, OnDestroy {
   mostrarMensajeResultado: boolean;
   minutero;
   index: number;
+  spinner: boolean;
 
-  constructor(public httpService: HttpService, public actualizacionusuarioService: ActualizacionusuarioService) {
-    this.manos = ['./assets/piedra.png', './assets/papel.png', './assets/tijera.png'];
+  constructor(
+  public httpService: HttpService,
+  public actualizacionusuarioService: ActualizacionusuarioService,
+  public RutasService: RutasService) {
+    this.manos = [
+      this.RutasService.rutaImagenesSitio + 'piedra.png',
+      this.RutasService.rutaImagenesSitio + 'papel.png',
+      this.RutasService.rutaImagenesSitio + 'tijera.png'];
     this.index = 0;
     this.generarNuevo();
   }
@@ -84,7 +92,7 @@ export class PpotComponent implements OnInit, OnDestroy {
       this.mensajeResultado = {
         tipo: 'gano',
         bootstrapClass: 'alert-success',
-        imagenPath: './assets/gano.png',
+        imagenPath: this.RutasService.rutaImagenesSitio + 'gano.png',
         titulo: 'Muy bien!',
         subtitulo: 'Ganaste ' + this.juego.puntos + ' puntos',
         parrafo: 'Tu logro quedó registrado ¿Jugamos otra vez?',
@@ -97,7 +105,7 @@ export class PpotComponent implements OnInit, OnDestroy {
       this.mensajeResultado = {
         tipo: 'perdio',
         bootstrapClass: 'alert-danger',
-        imagenPath: './assets/perdio.png',
+        imagenPath: this.RutasService.rutaImagenesSitio + 'perdio.png',
         titulo: 'Te quedaste sin vidas',
         subtitulo: 'No todo está perdido...',
         parrafo: '¿Qué tal si intentas una nueva partida?',
@@ -110,7 +118,7 @@ export class PpotComponent implements OnInit, OnDestroy {
       this.mensajeResultado = {
         tipo: 'acerto',
         bootstrapClass: 'alert-warning',
-        imagenPath: './assets/acerto.png',
+        imagenPath: this.RutasService.rutaImagenesSitio + 'acerto.png',
         titulo: 'Acertaste!',
         subtitulo: '',
         parrafo: 'Necesitás acertar ' + this.juego.aciertosRestantes + ' veces más para ganar. Te ' + (this.juego.vidas===1?'queda 1 vida':('quedan ' + this.juego.vidas + ' vidas')),
@@ -122,7 +130,7 @@ export class PpotComponent implements OnInit, OnDestroy {
       this.mensajeResultado = {
         tipo: 'erro',
         bootstrapClass: 'alert-warning',
-        imagenPath: './assets/erro.png',
+        imagenPath: this.RutasService.rutaImagenesSitio + 'erro.png',
         titulo: 'Erraste',
         subtitulo: 'Tenés que ser más rápido',
         parrafo: 'Necesitás acertar ' + this.juego.aciertosRestantes + ' veces más para ganar. Te ' + (this.juego.vidas===1?'queda 1 vida':('quedan ' + this.juego.vidas + ' vidas')),
@@ -134,7 +142,7 @@ export class PpotComponent implements OnInit, OnDestroy {
       this.mensajeResultado = {
         tipo: 'empate',
         bootstrapClass: 'alert-info',
-        imagenPath: './assets/empate.png',
+        imagenPath: this.RutasService.rutaImagenesSitio + 'empate.png',
         titulo: 'Empate',
         subtitulo: 'Aqui no ha pasado nada...',
         parrafo: 'Necesitás acertar ' + this.juego.aciertosRestantes + ' veces más para ganar. Te ' + (this.juego.vidas===1?'queda 1 vida':('quedan ' + this.juego.vidas + ' vidas')),
@@ -145,21 +153,23 @@ export class PpotComponent implements OnInit, OnDestroy {
   }
 
   guardarJugada(gano){
-    let usuarioActual = JSON.parse(localStorage.getItem('usuarioActual'));
-    usuarioActual.puntos = usuarioActual.puntos + this.juego.puntos;
-    usuarioActual.jugadas += 1;
-    gano === 'gano'? usuarioActual.ganadas += 1 : usuarioActual.perdidas += 1;
-    localStorage.setItem('usuarioActual', JSON.stringify(usuarioActual));
-    this.actualizacionusuarioService.actualizarObservable();
-    this.httpService.crear(this.juego.rutaAPI, {
-    "idUsuario": this.juego.usuarioActual.id,
-    "idJuego": this.juego.id,
-    "momento": Date.now(),
-    "gano": gano === 'gano'? 1 : 0,
-    "puntos": this.juego.puntos
-    })
+    var formData = new FormData();//borrar si no funciona
+    formData.append('idUsuario',this.juego.usuarioActual.id);
+    formData.append('idJuego', this.juego.id.toString());
+    formData.append('momento', Date.now().toString());
+    formData.append('gano', gano === 'gano'? "1" : "0");
+    formData.append('puntos', this.juego.puntos.toString());
+
+    this.spinner = true;
+    this.httpService.crear(this.juego.rutaAPI, formData)
     .then(datos => {
-//aca tengo que actualizar los puntos del observable para que actualize el menu puntos
+      this.spinner = false;
+      let usuarioActual = JSON.parse(localStorage.getItem('usuarioActual'));
+      usuarioActual.puntos = usuarioActual.puntos + this.juego.puntos;
+      usuarioActual.jugadas += 1;
+      gano === 'gano'? usuarioActual.ganadas += 1 : usuarioActual.perdidas += 1;
+      localStorage.setItem('usuarioActual', JSON.stringify(usuarioActual));
+      this.actualizacionusuarioService.actualizarObservable();
     })
     .catch(error => {
       console.log(error);

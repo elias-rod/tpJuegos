@@ -1,36 +1,37 @@
 <div class="container">
-    <div class="row vertical-center">
-      <div class="col-md-4 col-md-offset-4">
-        <div class="panel panel-default transparent">
-          <div class="panel-body">
-            <app-spinner *ngIf="spinner"></app-spinner>
-            <img src="assets/user.png" class="img-circle img-responsive center-block" width="128" height="128">
-            <h1 class="text-primary text-center">Registro</h1>
+  <div class="row vertical-center">
+    <div class="col-md-4 col-md-offset-4">
+      <div class="panel panel-default transparent">
+        <div class="panel-body">
+          <app-spinner *ngIf="spinner"></app-spinner>
+          <img [src]="RutasService.rutaImagenesSitio + 'user.png'" class="img-circle img-responsive center-block" width="128" height="128">
+          <h1 class="text-primary text-center">Registro</h1>
+          <br>
+          <div [formGroup]="registroForm" class="form-group">
+            <img src="" id="fotoPrevia" class="img-thumbnail">
+            <input type="file" id="foto" (change)="previsualizarFoto()">
             <br>
-            <div [formGroup]="registroForm" class="form-group">
-              <input type="file" id="foto">
-              <br>
-              <input type="text" formControlName="nombre" class="form-control" placeholder="Nombre" autofocus [ngClass]="{'error':!registroForm.controls['nombre'].valid && mensajeError}">
-              <br>
-              <input type="text" formControlName="apellido" class="form-control" placeholder="Apellido" [ngClass]="{'error':!registroForm.controls['apellido'].valid && mensajeError}">
-              <br>
-              <input type="email" formControlName="email" class="form-control" placeholder="Correo electrónico" [ngClass]="{'error':!registroForm.controls['email'].valid && mensajeError}">
-              <br>
-              <input type="password" formControlName="password" class="form-control" placeholder="Contraseña" [ngClass]="{'error':!registroForm.controls['password'].valid && mensajeError}">
-              <br>
-              <input type="text" formControlName="alias" class="form-control" placeholder="Alias" [ngClass]="{'error':!registroForm.controls['alias'].valid && mensajeError}">
-              <br>
-              <button class="btn btn-default pull-left" routerLink="/login">Cancelar</button>
-              <button type="submit" id="botonRegistro" class="btn btn-success pull-right animated slideInRight" (click)="registrar()">Registrar</button>
-              <div *ngIf="mensajeError">
-                <br><br><br>
-                <div class="alert alert-danger">
-                  {{mensajeError}}
-                </div>
-            </div>
-            </div>
+            <input type="text" formControlName="nombre" class="form-control" placeholder="Nombre" autofocus [ngClass]="{'error':!registroForm.controls['nombre'].valid && mensajeError}">
+            <br>
+            <input type="text" formControlName="apellido" class="form-control" placeholder="Apellido" [ngClass]="{'error':!registroForm.controls['apellido'].valid && mensajeError}">
+            <br>
+            <input type="email" formControlName="email" class="form-control" placeholder="Correo electrónico" [ngClass]="{'error':!registroForm.controls['email'].valid && mensajeError}">
+            <br>
+            <input type="password" formControlName="password" class="form-control" placeholder="Contraseña" [ngClass]="{'error':!registroForm.controls['password'].valid && mensajeError}">
+            <br>
+            <input type="text" formControlName="alias" class="form-control" placeholder="Alias" [ngClass]="{'error':!registroForm.controls['alias'].valid && mensajeError}">
+            <br>
+            <button class="btn btn-default pull-left" routerLink="/login">Cancelar</button>
+            <button type="submit" id="botonRegistro" class="btn btn-success pull-right animated slideInRight" (click)="registrar()">Registrar</button>
+            <div *ngIf="mensajeError">
+              <br><br><br>
+              <div class="alert alert-danger">
+                {{mensajeError}}
+              </div>
+          </div>
           </div>
         </div>
       </div>
-    </div>	
-  </div>
+    </div>
+  </div>	
+</div>

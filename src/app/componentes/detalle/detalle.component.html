@@ -4,7 +4,7 @@
       <div class="modal-header">
         <div class="media">
           <div class="media-left">
-            <img [src]="pathFotosServer + jugador.id + '.png?random=' + random" class="media-object avatar" *ngIf="jugador">
+            <img [src]="RutasService.rutaFotosUsuarios + jugador.id + '.png?random=' + random" class="media-object avatar" *ngIf="jugador">
           </div>
           <div class="media-body">
             <h4 class="media-heading">{{ jugador?.alias }}</h4>

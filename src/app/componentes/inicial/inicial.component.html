@@ -5,7 +5,7 @@
           <a routerLink="/juegos" class="list-group-item">
             <div class="media">
               <div class="media-left media-middle">
-                <img src="./assets/gameController.png" class="media-object imagenListado">
+                <img [src]="RutasService.rutaImagenesSitio + 'gameController.png'" class="media-object imagenListado">
               </div>
               <div class="media-body">
                 <h4 class="media-heading">Juegos</h4>
@@ -16,7 +16,7 @@
           <a routerLink="/ranking" class="list-group-item">
             <div class="media">
               <div class="media-left media-middle">
-                <img src="./assets/listado.png" class="media-object imagenListado">
+                <img [src]="RutasService.rutaImagenesSitio + 'listado.png'" class="media-object imagenListado">
               </div>
               <div class="media-body">
                 <h4 class="media-heading">Ranking</h4>

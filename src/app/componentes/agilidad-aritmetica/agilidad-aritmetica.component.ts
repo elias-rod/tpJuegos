@@ -4,6 +4,7 @@ import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { AgilidadAritmetica } from '../../clases/agilidad-aritmetica';
 import { HttpService } from '../../servicios/http.service';
 import { ActualizacionusuarioService } from '../../servicios/actualizacionusuario.service';
+import { RutasService } from '../../servicios/rutas.service';
 
 declare var $: any;
 
@@ -21,8 +22,13 @@ export class AgilidadAritmeticaComponent implements OnInit, OnDestroy {
   progresoBarra: number;
   colorBarra: string = '';
   minutero;
+  spinner: boolean;
 
-  constructor(private formBuilder:FormBuilder, public httpService: HttpService, public actualizacionusuarioService: ActualizacionusuarioService ) {
+  constructor(
+  private formBuilder:FormBuilder,
+  public httpService: HttpService,
+  public actualizacionusuarioService: ActualizacionusuarioService,
+  public RutasService: RutasService ) {
     this.juegoForm = this.formBuilder.group({
       'respuesta': [null, Validators.compose([Validators.required, Validators.maxLength(4)])]
     });
@@ -97,7 +103,7 @@ export class AgilidadAritmeticaComponent implements OnInit, OnDestroy {
       this.mensajeResultado = {
         tipo: 'gano',
         bootstrapClass: 'alert-success',
-        imagenPath: './assets/gano.png',
+        imagenPath: this.RutasService.rutaImagenesSitio + 'gano.png',
         titulo: 'Muy bien!',
         subtitulo: 'Ganaste ' + this.juego.puntos + ' puntos',
         parrafo: 'Tu logro quedó registrado ¿Jugamos otra vez?',
@@ -110,7 +116,7 @@ export class AgilidadAritmeticaComponent implements OnInit, OnDestroy {
       this.mensajeResultado = {
         tipo: 'perdio',
         bootstrapClass: 'alert-danger',
-        imagenPath: './assets/perdio.png',
+        imagenPath: this.RutasService.rutaImagenesSitio + 'perdio.png',
         titulo: 'Te quedaste sin vidas',
         subtitulo: this.juego.operando1 + ' ' + this.juego.operador + ' ' + this.juego.operando2 + ' = ' + this.juego.solucion + '. Vos respondiste: ' + (this.juego.respuesta == null?'nada':this.juego.respuesta),
         parrafo: '¿Intentamos de nuevo?',
@@ -123,7 +129,7 @@ export class AgilidadAritmeticaComponent implements OnInit, OnDestroy {
       this.mensajeResultado = {
         tipo: 'continua',
         bootstrapClass: 'alert-warning',
-        imagenPath: './assets/acerto.png',
+        imagenPath: this.RutasService.rutaImagenesSitio + 'acerto.png',
         titulo: 'Acertaste!',
         subtitulo: this.juego.operando1 + ' ' + this.juego.operador + ' ' + this.juego.operando2 + ' = ' + this.juego.solucion,
         parrafo: 'Necesitas acertar ' + this.juego.aciertosRestantes + ' veces más para ganar. Te ' + (this.juego.vidas===1?'queda 1 vida':('quedan ' + this.juego.vidas + ' vidas')),
@@ -135,7 +141,7 @@ export class AgilidadAritmeticaComponent implements OnInit, OnDestroy {
       this.mensajeResultado = {
         tipo: 'continua',
         bootstrapClass: 'alert-warning',
-        imagenPath: './assets/erro.png',
+        imagenPath: this.RutasService.rutaImagenesSitio + 'erro.png',
         titulo: 'Erraste',
         subtitulo: this.juego.operando1 + ' ' + this.juego.operador + ' ' + this.juego.operando2 + ' = ' + this.juego.solucion + '. Vos respondiste: ' + (this.juego.respuesta == null?'nada':this.juego.respuesta),
         parrafo: 'Necesitas acertar ' + this.juego.aciertosRestantes + ' veces más para ganar. Te ' + (this.juego.vidas===1?'queda 1 vida':('quedan ' + this.juego.vidas + ' vidas')),
@@ -149,21 +155,23 @@ export class AgilidadAritmeticaComponent implements OnInit, OnDestroy {
   }
 
   guardarJugada(gano){
-    let usuarioActual = JSON.parse(localStorage.getItem('usuarioActual'));
-    usuarioActual.puntos = usuarioActual.puntos + this.juego.puntos;
-    usuarioActual.jugadas += 1;
-    gano === 'gano'? usuarioActual.ganadas += 1 : usuarioActual.perdidas += 1;
-    localStorage.setItem('usuarioActual', JSON.stringify(usuarioActual));
-    this.actualizacionusuarioService.actualizarObservable();
-    this.httpService.crear(this.juego.rutaAPI, {
-    "idUsuario": this.juego.usuarioActual.id,
-    "idJuego": this.juego.id,
-    "momento": Date.now(),
-    "gano": gano === 'gano'? 1 : 0,
-    "puntos": this.juego.puntos
-    })
+    var formData = new FormData();//borrar si no funciona
+    formData.append('idUsuario',this.juego.usuarioActual.id);
+    formData.append('idJuego', this.juego.id.toString());
+    formData.append('momento', Date.now().toString());
+    formData.append('gano', gano === 'gano'? "1" : "0");
+    formData.append('puntos', this.juego.puntos.toString());
+
+    this.spinner = true;
+    this.httpService.crear(this.juego.rutaAPI, formData)
     .then(datos => {
-//aca tengo que actualizar los puntos del observable para que actualize el menu puntos
+      this.spinner = false;
+      let usuarioActual = JSON.parse(localStorage.getItem('usuarioActual'));
+      usuarioActual.puntos = usuarioActual.puntos + this.juego.puntos;
+      usuarioActual.jugadas += 1;
+      gano === 'gano'? usuarioActual.ganadas += 1 : usuarioActual.perdidas += 1;
+      localStorage.setItem('usuarioActual', JSON.stringify(usuarioActual));
+      this.actualizacionusuarioService.actualizarObservable();
     })
     .catch(error => {
       console.log(error);

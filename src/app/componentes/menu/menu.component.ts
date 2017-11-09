@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
 import { ActualizacionusuarioService } from '../../servicios/actualizacionusuario.service';
+import { RutasService } from '../../servicios/rutas.service';
 
 @Component({
   selector: 'app-menu',
@@ -14,8 +15,10 @@ export class MenuComponent implements OnInit, OnDestroy{
   muestraAutor: boolean;
   muestraDatosLogueo: boolean;
   subscripcion: Subscription;
+  random: number;
 
-  constructor(public actualizacionusuarioService: ActualizacionusuarioService) {
+  constructor(public actualizacionusuarioService: ActualizacionusuarioService, public RutasService: RutasService) {
+    this.random = Math.random();
     if(!localStorage.getItem('usuarioActual')){
       this.muestraDatosLogueo = false;
     }

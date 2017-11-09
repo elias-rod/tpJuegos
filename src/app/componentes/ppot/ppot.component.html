@@ -17,6 +17,7 @@
                         </div>
                     </div>
                     <div class="alert" [ngClass]="mensajeResultado?.bootstrapClass" *ngIf="mostrarMensajeResultado">
+                        <app-spinner *ngIf="spinner"></app-spinner>
                         <h2 align="center">{{mensajeResultado?.titulo}}</h2>
                         <div class="media">
                             <div class="media-left">

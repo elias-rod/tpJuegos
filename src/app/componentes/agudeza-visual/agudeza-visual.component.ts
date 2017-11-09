@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { AgudezaVisual } from '../../clases/agudeza-visual';
 import { HttpService } from '../../servicios/http.service';
 import { ActualizacionusuarioService } from '../../servicios/actualizacionusuario.service';
+import { RutasService } from '../../servicios/rutas.service';
 
 declare var $: any;
 
@@ -17,8 +18,12 @@ export class AgudezaVisualComponent implements OnInit {
   claseDinamicaOpciones: string;
   mensajeResultado: object;
   mostrarMensajeResultado: boolean;
+  spinner: boolean;
 
-  constructor(public httpService: HttpService, public actualizacionusuarioService: ActualizacionusuarioService) {
+  constructor(
+  public httpService: HttpService,
+  public actualizacionusuarioService: ActualizacionusuarioService,
+  public RutasService: RutasService) {
     this.juego = new AgudezaVisual();
     this.juego.generarSolucion();
   }
@@ -77,7 +82,7 @@ export class AgudezaVisualComponent implements OnInit {
       this.mensajeResultado = {
         tipo: 'gano',
         bootstrapClass: 'alert-success',
-        imagenPath: './assets/gano.png',
+        imagenPath: this.RutasService.rutaImagenesSitio + 'gano.png',
         titulo: 'Muy bien!',
         subtitulo: 'Ganaste ' + this.juego.puntos + ' puntos',
         parrafo: 'Tu logro quedó registrado ¿Jugamos otra vez?',
@@ -90,7 +95,7 @@ export class AgudezaVisualComponent implements OnInit {
       this.mensajeResultado = {
         tipo: 'perdio',
         bootstrapClass: 'alert-danger',
-        imagenPath: './assets/perdio.png',
+        imagenPath: this.RutasService.rutaImagenesSitio + 'perdio.png',
         titulo: 'Te quedaste sin vidas',
         subtitulo: 'La respuesta correcta era: ' + (this.juego.solucion + 1),
         parrafo: '¿Intentamos de nuevo?',
@@ -103,7 +108,7 @@ export class AgudezaVisualComponent implements OnInit {
       this.mensajeResultado = {
         tipo: 'acerto',
         bootstrapClass: 'alert-warning',
-        imagenPath: './assets/acerto.png',
+        imagenPath: this.RutasService.rutaImagenesSitio + 'acerto.png',
         titulo: 'Acertaste!',
         subtitulo: '',
         parrafo: 'Necesitás acertar ' + this.juego.aciertosRestantes + ' veces más para ganar. Te ' + (this.juego.vidas===1?'queda 1 vida':('quedan ' + this.juego.vidas + ' vidas')),
@@ -115,7 +120,7 @@ export class AgudezaVisualComponent implements OnInit {
       this.mensajeResultado = {
         tipo: 'erro',
         bootstrapClass: 'alert-warning',
-        imagenPath: './assets/erro.png',
+        imagenPath: this.RutasService.rutaImagenesSitio + 'erro.png',
         titulo: 'Erraste',
         subtitulo: 'La opción correcta era la ' + (this.juego.solucion + 1),
         parrafo: 'Necesitás acertar ' + this.juego.aciertosRestantes + ' veces más para ganar. Te ' + (this.juego.vidas===1?'queda 1 vida':('quedan ' + this.juego.vidas + ' vidas')),
@@ -124,23 +129,25 @@ export class AgudezaVisualComponent implements OnInit {
       }
     }
   }
-
+  
   guardarJugada(gano){
-    let usuarioActual = JSON.parse(localStorage.getItem('usuarioActual'));
-    usuarioActual.puntos = usuarioActual.puntos + this.juego.puntos;
-    usuarioActual.jugadas += 1;
-    gano === 'gano'? usuarioActual.ganadas += 1 : usuarioActual.perdidas += 1;
-    localStorage.setItem('usuarioActual', JSON.stringify(usuarioActual));
-    this.actualizacionusuarioService.actualizarObservable();
-    this.httpService.crear(this.juego.rutaAPI, {
-    "idUsuario": this.juego.usuarioActual.id,
-    "idJuego": this.juego.id,
-    "momento": Date.now(),
-    "gano": gano === 'gano'? 1 : 0,
-    "puntos": this.juego.puntos
-    })
+    var formData = new FormData();//borrar si no funciona
+    formData.append('idUsuario',this.juego.usuarioActual.id);
+    formData.append('idJuego', this.juego.id.toString());
+    formData.append('momento', Date.now().toString());
+    formData.append('gano', gano === 'gano'? "1" : "0");
+    formData.append('puntos', this.juego.puntos.toString());
+
+    this.spinner = true;
+    this.httpService.crear(this.juego.rutaAPI, formData)
     .then(datos => {
-//aca tengo que actualizar los puntos del observable para que actualize el menu puntos
+      this.spinner = false;
+      let usuarioActual = JSON.parse(localStorage.getItem('usuarioActual'));
+      usuarioActual.puntos = usuarioActual.puntos + this.juego.puntos;
+      usuarioActual.jugadas += 1;
+      gano === 'gano'? usuarioActual.ganadas += 1 : usuarioActual.perdidas += 1;
+      localStorage.setItem('usuarioActual', JSON.stringify(usuarioActual));
+      this.actualizacionusuarioService.actualizarObservable();
     })
     .catch(error => {
       console.log(error);

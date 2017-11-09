@@ -1,4 +1,5 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { RutasService } from '../../servicios/rutas.service';
 
 @Component({
   selector: 'app-autor',
@@ -7,7 +8,7 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 })
 export class AutorComponent implements OnInit {
   @Output() detalleCerro = new EventEmitter();
-  constructor() { }
+  constructor(public RutasService: RutasService) { }
 
   ngOnInit() {
   }

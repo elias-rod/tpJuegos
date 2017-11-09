@@ -3,6 +3,7 @@ import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { HttpService } from '../../servicios/http.service';
 import { Router } from '@angular/router';
 
+import { RutasService } from '../../servicios/rutas.service';
 import { ActualizacionusuarioService } from '../../servicios/actualizacionusuario.service';
 
 @Component({
@@ -12,7 +13,7 @@ import { ActualizacionusuarioService } from '../../servicios/actualizacionusuari
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
-  rutaAPI: string = "https://tp2017utn.000webhostapp.com/index.php/consultaUsuarios/login";
+  rutaAPI: string = this.RutasService.rutaAPI + "consultaUsuarios/login";
   mensajeError: boolean;
   spinner: boolean;
 
@@ -20,7 +21,8 @@ export class LoginComponent implements OnInit {
   private formBuilder:FormBuilder,
   public HttpService: HttpService,
   private router: Router,
-  public actualizacionusuarioService: ActualizacionusuarioService) {
+  public actualizacionusuarioService: ActualizacionusuarioService,
+  public RutasService: RutasService) {
     this.loginForm = this.formBuilder.group({
       'email': [null, Validators.compose([Validators.required, Validators.pattern(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)])],
       'password': [null, Validators.compose([Validators.required])]

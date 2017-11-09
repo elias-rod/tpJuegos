@@ -4,6 +4,7 @@ import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { AdivinaNumero } from '../../clases/adivina-numero';
 import { HttpService } from '../../servicios/http.service';
 import { ActualizacionusuarioService } from '../../servicios/actualizacionusuario.service';
+import { RutasService } from '../../servicios/rutas.service';
 
 declare var $: any;
 
@@ -17,8 +18,13 @@ export class AdivinaNumeroComponent implements OnInit {
   juegoForm: FormGroup;
   mensajeResultado: object;
   mostrarMensajeResultado: boolean;
+  spinner: boolean;
 
-  constructor(private formBuilder:FormBuilder, public httpService: HttpService, public actualizacionusuarioService: ActualizacionusuarioService ) {
+  constructor(
+  private formBuilder:FormBuilder,
+  public httpService: HttpService,
+  public actualizacionusuarioService: ActualizacionusuarioService,
+  public RutasService: RutasService ) {
     this.juegoForm = this.formBuilder.group({
       'respuesta': [null, Validators.compose([Validators.required, Validators.maxLength(2)])]
     });
@@ -56,7 +62,7 @@ export class AdivinaNumeroComponent implements OnInit {
       this.mensajeResultado = {
         tipo: 'gano',
         bootstrapClass: 'alert-success',
-        imagenPath: './assets/gano.png',
+        imagenPath: this.RutasService.rutaImagenesSitio + 'gano.png',
         titulo: 'Acertaste!',
         subtitulo: this.juego.puntos === 1?'Ganaste 1 punto':'Ganaste ' + this.juego.puntos + ' puntos',
         parrafo: 'Tu logro quedó registrado ¿Jugamos otra vez?',
@@ -69,7 +75,7 @@ export class AdivinaNumeroComponent implements OnInit {
       this.mensajeResultado = {
         tipo: 'perdio',
         bootstrapClass: 'alert-danger',
-        imagenPath: './assets/perdio.png',
+        imagenPath: this.RutasService.rutaImagenesSitio + 'perdio.png',
         titulo: 'Perdiste!',
         subtitulo: 'El número secreto era: ' +  this.juego.solucion,
         parrafo: '¿Intentamos de nuevo?',
@@ -83,7 +89,7 @@ export class AdivinaNumeroComponent implements OnInit {
       this.mensajeResultado = {
         tipo: 'continua',
         bootstrapClass: 'alert-warning',
-        imagenPath: './assets/error.png',
+        imagenPath: this.RutasService.rutaImagenesSitio + 'error.png',
         titulo: 'Ups!',
         subtitulo: this.juego.pista,
         parrafo: this.juego.vidas === 1?'Te queda 1 vida':'Te quedan ' + this.juego.vidas + ' vidas',
@@ -97,21 +103,23 @@ export class AdivinaNumeroComponent implements OnInit {
   }
   
   guardarJugada(gano){
-    let usuarioActual = JSON.parse(localStorage.getItem('usuarioActual'));
-    usuarioActual.puntos = usuarioActual.puntos + this.juego.puntos;
-    usuarioActual.jugadas += 1;
-    gano === 'gano'? usuarioActual.ganadas += 1 : usuarioActual.perdidas += 1;
-    localStorage.setItem('usuarioActual', JSON.stringify(usuarioActual));
-    this.actualizacionusuarioService.actualizarObservable();
-    this.httpService.crear(this.juego.rutaAPI, {
-    "idUsuario": this.juego.usuarioActual.id,
-    "idJuego": this.juego.id,
-    "momento": Date.now(),
-    "gano": gano === 'gano'? 1 : 0,
-    "puntos": this.juego.puntos
-    })
+    var formData = new FormData();//borrar si no funciona
+    formData.append('idUsuario',this.juego.usuarioActual.id);
+    formData.append('idJuego', this.juego.id.toString());
+    formData.append('momento', Date.now().toString());
+    formData.append('gano', gano === 'gano'? "1" : "0");
+    formData.append('puntos', this.juego.puntos.toString());
+
+    this.spinner = true;
+    this.httpService.crear(this.juego.rutaAPI, formData)
     .then(datos => {
-//aca tengo que actualizar los puntos del observable para que actualize el menu puntos
+      this.spinner = false;
+      let usuarioActual = JSON.parse(localStorage.getItem('usuarioActual'));
+      usuarioActual.puntos = usuarioActual.puntos + this.juego.puntos;
+      usuarioActual.jugadas += 1;
+      gano === 'gano'? usuarioActual.ganadas += 1 : usuarioActual.perdidas += 1;
+      localStorage.setItem('usuarioActual', JSON.stringify(usuarioActual));
+      this.actualizacionusuarioService.actualizarObservable();
     })
     .catch(error => {
       console.log(error);

@@ -10,7 +10,7 @@ export class HttpService {
   }
   
   leer(ruta, id){
-    return this.http.get(ruta + '?id=' + id)
+    return this.http.get(ruta + id)
     .toPromise()
     .then(this.extraerDato)
     .catch(this.manejarError);

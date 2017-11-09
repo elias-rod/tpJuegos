@@ -10,6 +10,7 @@ import { RuteoModule } from './modulos/ruteo.module';
 import { HttpService } from './servicios/http.service';
 import { ActualizacionusuarioService } from './servicios/actualizacionusuario.service';
 import { AuthGuard } from './servicios/auth.guard';
+import { RutasService } from './servicios/rutas.service';
 
 import { LoginComponent } from './componentes/login/login.component';
 import { MenuComponent } from './componentes/menu/menu.component';
@@ -61,7 +62,8 @@ import { UsuarioComponent } from './componentes/usuario/usuario.component';
   providers: [
     HttpService,
     AuthGuard,
-    ActualizacionusuarioService
+    ActualizacionusuarioService,
+    RutasService
   ],
   bootstrap: [AppComponent]
 })

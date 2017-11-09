@@ -37,10 +37,10 @@ export class AgudezaVisual extends Juego {
         }
         this.solucion = Math.floor((Math.random() * 3));
         this.color[3] = this.color[this.solucion];
+        console.log('Solución: ' + (this.solucion + 1));
     }
 
     verificar(){
-        console.log('Solución: ' + (this.solucion + 1));
         if (this.respuesta == this.solucion) {
             this.aciertosRestantes--;
             if (this.aciertosRestantes == 0) {
