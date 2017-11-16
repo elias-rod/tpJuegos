@@ -6,48 +6,53 @@ import 'rxjs/add/operator/toPromise';
 export class HttpService {
 
   constructor(public http: Http, public opcionesPost: RequestOptions) {
-    opcionesPost = new RequestOptions({ headers: new Headers({ "Content-Type": "multipart/form-data" })});
+    //this.opcionesPost = new RequestOptions({ headers: new Headers({ "token":  "chubaca"})});
+    let headers = new Headers();
+    headers.append('token', localStorage.getItem('token'));
+    this.opcionesPost = new RequestOptions({ headers: headers });
   }
-  
+
   leer(ruta, id){
-    return this.http.get(ruta + id)
+    return this.http.get(ruta + id, new RequestOptions({ headers: new Headers({ "token": JSON.parse(localStorage.getItem('token'))})}))
+    .toPromise()
+    .then(this.extraerDato)
+    .catch(this.manejarError);
+  }
+
+  leerTodos(ruta){
+    return this.http.get(ruta + 'leerTodos', new RequestOptions({ headers: new Headers({ "token": JSON.parse(localStorage.getItem('token'))})}))
     .toPromise()
     .then(this.extraerDato)
     .catch(this.manejarError);
   }
 
   leerTodosOrdenado(ruta, criterio, sentido){
-    return this.http.get(ruta + 'leerTodos/' + criterio + '/' + sentido)
+    return this.http.get(ruta + 'leerTodos/' + criterio + '/' + sentido, new RequestOptions({ headers: new Headers({ "token": JSON.parse(localStorage.getItem('token'))})}))
     .toPromise()
     .then(this.extraerDato)
     .catch(this.manejarError);
   }
 
   leerTodosFiltrado(ruta, criterio){
-    return this.http.get(ruta + 'leerTodos/' + criterio)
+    return this.http.get(ruta + 'leerTodos/' + criterio, new RequestOptions({ headers: new Headers({ "token": JSON.parse(localStorage.getItem('token'))})}))
     .toPromise()
     .then(this.extraerDato)
     .catch(this.manejarError);
   }
 
   crear(ruta, cuerpo){
-    return this.http.post(ruta, cuerpo, this.opcionesPost)
-    .toPromise()
-    .then(this.extraerDato)
-    .catch(this.manejarError);
-  }
-
-  actualizar(ruta, cuerpo){
-    return this.http.post(ruta + 'actualizar', JSON.stringify(cuerpo), this.opcionesPost)
+    return this.http.post(ruta, cuerpo, new RequestOptions({ headers: new Headers({ "token": JSON.parse(localStorage.getItem('token'))})}))
     .toPromise()
     .then(this.extraerDato)
     .catch(this.manejarError);
   }
 
   login(ruta, email, password){
-    return this.http.post(ruta, JSON.stringify({"email" : email, "password" : password}), this.opcionesPost)
+    return this.http.post(ruta, JSON.stringify({"email" : email, "password" : password}))
     .toPromise()
-    .then(this.extraerDato)
+    .then(data => {
+      return [data.json(), data.headers.get('token')];
+    })
     .catch(this.manejarError);
   }
 
@@ -55,7 +60,14 @@ export class HttpService {
     console.log(error);
   }
 
-  extraerDato(respuesta: Response){
-    return respuesta.json() || {};
+  extraerDato(respuesta){
+    let respuestaJson = respuesta.json() || {};
+    if(respuestaJson.error){
+      alert(respuestaJson.error);
+      return respuestaJson.error;
+    }
+    else{
+      return respuestaJson;
+    }
   }
 }

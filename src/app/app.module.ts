@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { HttpModule } from '@angular/http';
+import { AuthModule } from './modulos/auth.module';
 
 import { AppComponent } from './app.component';
 import { RuteoModule } from './modulos/ruteo.module';
@@ -29,6 +30,7 @@ import { VictoriaPipe } from './pipes/victoria.pipe';
 import { SpinnerComponent } from './componentes/spinner/spinner.component';
 import { AutorComponent } from './componentes/autor/autor.component';
 import { UsuarioComponent } from './componentes/usuario/usuario.component';
+import { NominaComponent } from './componentes/nomina/nomina.component';
 
 @NgModule({
   declarations: [
@@ -50,14 +52,16 @@ import { UsuarioComponent } from './componentes/usuario/usuario.component';
     VictoriaPipe,
     SpinnerComponent,
     AutorComponent,
-    UsuarioComponent
+    UsuarioComponent,
+    NominaComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,
     RuteoModule,
-    HttpModule
+    HttpModule,
+    AuthModule
   ],
   providers: [
     HttpService,

@@ -1,0 +1,14 @@
+.avatar{
+    height: 50px;
+    width: 50px;
+}
+
+.error{
+    border: 1px solid red;
+}
+
+.flechaOrdenamiento{
+    cursor:pointer;
+    height: 15px;
+    width: 8px;
+}

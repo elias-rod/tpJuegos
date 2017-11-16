@@ -1,4 +1,5 @@
 #loader {
+    z-index: 9999;
     bottom: 0;
     height: 175px;
     left: 0;

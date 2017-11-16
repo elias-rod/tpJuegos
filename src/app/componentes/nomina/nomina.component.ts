@@ -1,26 +1,47 @@
 import { Component, OnInit } from '@angular/core';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
+
 import { HttpService } from '../../servicios/http.service';
-import { Router } from '@angular/router';
+import { SpinnerComponent } from '../spinner/spinner.component';
 
 import { RutasService } from '../../servicios/rutas.service';
+
 declare var $: any;
 
 @Component({
-  selector: 'app-registro',
-  templateUrl: './registro.component.html',
-  styleUrls: ['./registro.component.css']
+  selector: 'app-nomina',
+  templateUrl: './nomina.component.html',
+  styleUrls: ['./nomina.component.css']
 })
-export class RegistroComponent implements OnInit {
-  registroForm: FormGroup;
-  mensajeError: string;
+export class NominaComponent implements OnInit {
+  usuarios: Array<any>;
+  copiaUsuarios: Array<any>;
+  random: number;
+  usuario: object;
   spinner: boolean;
+  mensajeError: string;
+  jugadorActual;
+  mostrarConfirmacion: boolean = false;
+  registroForm: FormGroup;
+  filtroForm: FormGroup;
+  ordenes: object = {};
 
   constructor(
-  private formBuilder:FormBuilder,
-  public HttpService: HttpService,
-  private router: Router,
-  public RutasService: RutasService) {
+    public HttpService: HttpService,
+    public RutasService: RutasService,
+    private formBuilder:FormBuilder) {
+    this.leerTodos();
+    this.random = Math.random();
+
+    this.filtroForm = this.formBuilder.group({
+      'id': null,
+      'nombre': null,
+      'apellido': null,
+      'email': null,
+      'password': null,
+      'alias': null
+    });
+
     this.registroForm = this.formBuilder.group({
       'nombre': [null, Validators.compose([Validators.required, Validators.pattern(/^[a-zA-Z]+$/)])],
       'apellido': [null, Validators.compose([Validators.required, Validators.pattern(/^[a-zA-Z]+$/)])],
@@ -31,7 +52,36 @@ export class RegistroComponent implements OnInit {
     this.mensajeError = null;
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+  }
+
+  leerTodos(){
+    this.spinner = true;
+    this.HttpService.leerTodos(this.RutasService.rutaAPI + "consultaUsuarios/")
+    .then(datos => {
+      this.spinner = false;
+      this.usuarios = this.copiaUsuarios = datos;
+      this.random = Math.random();
+      //Restablece los ordenes
+      for (var key in this.filtroForm.controls) {
+        this.ordenes[key] = true;
+      }
+    })
+    .catch(error => {
+      console.log(error);
+    });
+  }
+
+  cargarUsuario(usuarioId){
+    this.spinner = true;
+    this.HttpService.leer(this.RutasService.rutaAPI + "consultaUsuarios/leer/", usuarioId)
+    .then(datos => {
+      this.spinner = false;
+      this.jugadorActual = datos;
+      this.registroForm.patchValue(this.jugadorActual);
+      $("#fotoPrevia").attr('src', this.RutasService.rutaFotosUsuarios + this.jugadorActual.id + '.png?random=' + this.random);
+    });
+  }
 
   previsualizarFoto(){
     //VERIFICACION DE VALIDACION
@@ -48,6 +98,7 @@ export class RegistroComponent implements OnInit {
     //2)LECTURA DEL ARCHIVO Y ALMACENAMIENTO COMO URL EN LA PROPIEDAD "RESULT"
     miLector.readAsDataURL($('#foto')[0].files[0]);
   }
+  
   //VALIDACION DE FOTO PREVISUALIZADA EN EXTENSION Y TAMAÑO
   validarFoto(){
     //OBTENCION DE LA FOTO SELECCIONADA
@@ -68,12 +119,8 @@ export class RegistroComponent implements OnInit {
     return true;
   }
 
-  registrar(){
-    if($("#foto").val() == ''){
-      this.mensajeError = 'Debe seleccionar una foto';
-      return;
-    }
-    else if(this.registroForm.controls['nombre'].valid == false){
+  actualizar(habilitado){
+    if(this.registroForm.controls['nombre'].valid == false){
       this.mensajeError = 'El nombre es obligatorio y debe contener solo letras';
       return;
     }
@@ -93,26 +140,56 @@ export class RegistroComponent implements OnInit {
       this.mensajeError = 'El alias es obligatoria y solo debe contener letras y/o numeros';
       return;
     }
-    this.spinner = true;
-    var formData = new FormData();//borrar si no funciona
-    formData.append('foto', $('#foto')[0].files[0]);
+    
+    var formData = new FormData();
+    //Si hay foto, agregarla al formData
+    if($("#foto").val() !== ''){
+      formData.append('foto', $('#foto')[0].files[0]);
+    }
     formData.append('nombre', this.registroForm.value.nombre);
     formData.append('apellido', this.registroForm.value.apellido);
     formData.append('email', this.registroForm.value.email);
     formData.append('password', this.registroForm.value.password);
     formData.append('alias', this.registroForm.value.alias);
-    formData.append('idRol', '2');
-    this.HttpService.crear(this.RutasService.rutaAPI + "consultaUsuarios/crear", formData)
+    formData.append('habilitado', habilitado);
+    formData.append('id', this.jugadorActual.id.toString());
+    this.spinner = true;
+    this.HttpService.crear(this.RutasService.rutaAPI + "consultaUsuarios/actualizar", formData)
     .then(datos => {
-      console.log(datos);
       this.spinner = false;
       if(datos == true){
-        this.router.navigate(['login']);
+        this.leerTodos();
       }
       this.mensajeError = datos.error;
     })
     .catch(error => {
       console.log(error);
     });
+  }
+
+  filtrar(columna){
+    this.usuarios = this.copiaUsuarios.filter(
+      function(objeto){
+        if(objeto[columna].toString().toLowerCase().includes(this.filtroForm.controls[columna].value.toString().toLowerCase())){
+          return true;
+        }
+        else{
+          return false;
+        }
+      }, this
+    );
+  }
+
+  ordenar(criterio){
+    function comparacion(a,b){
+      return a[criterio].toString().localeCompare(b[criterio].toString(), undefined, { numeric: true, sensitivity: 'base' });
+    }
+    if (this.ordenes[criterio]) {
+      this.usuarios = this.copiaUsuarios.sort(comparacion);
+    }
+    else{
+      this.usuarios = this.copiaUsuarios.sort(comparacion).reverse();
+    }
+    this.ordenes[criterio] = !this.ordenes[criterio];
   }
 }

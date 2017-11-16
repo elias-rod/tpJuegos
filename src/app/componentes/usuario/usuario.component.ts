@@ -118,14 +118,11 @@ export class UsuarioComponent implements OnInit {
     this.spinner = true;
     this.HttpService.crear(this.RutasService.rutaAPI + "consultaUsuarios/actualizar", formData)
     .then(datos => {
-      console.log(datos);
       this.spinner = false;
       if(datos == true){
         this.router.navigate(['login']);
       }
-      else{
-        this.mensajeError = datos.respuesta;
-      }
+      this.mensajeError = datos.error;
     })
     .catch(error => {
       console.log(error);

@@ -1,0 +1,137 @@
+<!-- Modal confirmar -->
+<div class="modal fade" id="modalConfirmar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog transparent" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1>¿Confirma que desea eliminar el usuario?</h1>
+      </div>
+      <div class="modal-body">
+        <p>El usuario será marcado como inhabilitado en la base de datos. Contacte con el administrador para volver a habilitarlo.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-info" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="actualizar('0')">Borrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Fin modal confirmar -->
+<!-- Modal editar -->
+<div class="modal fade" id="modalEditar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"> 
+  <div class="modal-dialog transparent" role="document">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-3">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="text-primary text-center">Actualización</h1>
+          </div>
+          <div class="modal-body">
+
+            <div [formGroup]="registroForm" class="form-group">
+              <img src="" id="fotoPrevia" class="img-thumbnail">
+              <input type="file" id="foto" (change)="previsualizarFoto()">
+              <br>
+              <input type="text" formControlName="nombre" class="form-control" placeholder="Nombre" autofocus [ngClass]="{'error':!registroForm.controls['nombre'].valid && mensajeError}">
+              <br>
+              <input type="text" formControlName="apellido" class="form-control" placeholder="Apellido" [ngClass]="{'error':!registroForm.controls['apellido'].valid && mensajeError}">
+              <br>
+              <input type="email" formControlName="email" class="form-control" placeholder="Correo electrónico" [ngClass]="{'error':!registroForm.controls['email'].valid && mensajeError}">
+              <br>
+              <input type="password" formControlName="password" class="form-control" placeholder="Contraseña" [ngClass]="{'error':!registroForm.controls['password'].valid && mensajeError}">
+              <br>
+              <input type="text" formControlName="alias" class="form-control" placeholder="Alias" [ngClass]="{'error':!registroForm.controls['alias'].valid && mensajeError}">
+            </div>
+
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-info" data-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-success animated slideInRight" data-dismiss="modal" (click)="actualizar('1')">Actualizar</button>
+            <div *ngIf="mensajeError">
+              <br>
+              <div class="alert alert-danger">
+                {{mensajeError}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Fin modal editar -->
+<app-spinner *ngIf="spinner"></app-spinner>
+<div class="container">
+  <div class="row">
+    <div class="col-md-10 col-md-offset-1">
+        <div class="panel panel-default transparent">
+          <div class="panel-heading text-center">
+            <h1>NOMINA DE USUARIOS</h1><img class="avatar" [src]="RutasService.rutaImagenesSitio + 'nomina.png'">
+          </div>
+          <div class="panel-body">
+            <div [formGroup]="filtroForm">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>
+                      <input type="text" formControlName="id" class="form-control" placeholder="Filtro" (keyup)="filtrar('id')">
+                    </th>
+                    <th>
+                      <input type="text" formControlName="nombre" class="form-control" placeholder="Filtro" (keyup)="filtrar('nombre')">
+                    </th>
+                    <th>
+                      <input type="text" formControlName="apellido" class="form-control" placeholder="Filtro" (keyup)="filtrar('apellido')">
+                    </th>
+                    <th>
+                      <input type="text" formControlName="email" class="form-control" placeholder="Filtro" (keyup)="filtrar('email')">
+                    </th>
+                    <th>
+                      <input type="text" formControlName="password" class="form-control" placeholder="Filtro" (keyup)="filtrar('password')">
+                    </th>
+                    <th>
+                      <input type="text" formControlName="alias" class="form-control" placeholder="Filtro" (keyup)="filtrar('alias')">
+                    </th>
+                    <th></th>
+                  </tr>
+                  <tr>
+                    <th>Id
+                      <img class="flechaOrdenamiento" [src]="RutasService.rutaImagenesSitio + 'ordenar.png'" (click)="ordenar('id')">
+                    </th>
+                    <th>Nombre
+                      <img class="flechaOrdenamiento" [src]="RutasService.rutaImagenesSitio + 'ordenar.png'" (click)="ordenar('nombre')">
+                    </th>
+                    <th>Apellido
+                      <img class="flechaOrdenamiento" [src]="RutasService.rutaImagenesSitio + 'ordenar.png'" (click)="ordenar('apellido')">
+                    </th>
+                    <th>Email
+                      <img class="flechaOrdenamiento" [src]="RutasService.rutaImagenesSitio + 'ordenar.png'" (click)="ordenar('email')">
+                    </th>
+                    <th>Password
+                      <img class="flechaOrdenamiento" [src]="RutasService.rutaImagenesSitio + 'ordenar.png'" (click)="ordenar('password')">
+                    </th>
+                    <th>Alias
+                      <img class="flechaOrdenamiento" [src]="RutasService.rutaImagenesSitio + 'ordenar.png'" (click)="ordenar('alias')">
+                    </th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let usuario of usuarios; index as i">
+                    <td>{{ usuario.id }}</td>
+                    <td>{{ usuario.nombre }}</td>
+                    <td>{{ usuario.apellido }}</td>
+                    <td>{{ usuario.email }}</td>
+                    <td>{{ usuario.password }}</td>
+                    <td><img class="avatar" [src]="RutasService.rutaFotosUsuarios + usuario.id + '.png?random=' + random"> {{ usuario.alias }}</td>
+                    <td>
+                      <button type="button" (click)="cargarUsuario(usuario.id)" class="btn btn-primary" data-toggle="modal" data-target="#modalEditar" data-backdrop="static" data-keyboard="false">Editar</button>
+                      <button type="button" (click)="cargarUsuario(usuario.id)" class="btn btn-warning" data-toggle="modal" data-target="#modalConfirmar" data-backdrop="static" data-keyboard="false">Eliminar</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>

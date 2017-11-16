@@ -26,13 +26,23 @@ export class MenuComponent implements OnInit, OnDestroy{
       this.muestraDatosLogueo = true;
       this.jugadorActual = JSON.parse(localStorage.getItem('usuarioActual'));
     }
-    this.subscripcion = this.actualizacionusuarioService.obtenerObservable().subscribe(valor => {
-      this.jugadorActual = JSON.parse(localStorage.getItem('usuarioActual'));
-      this.muestraDatosLogueo = true;
+    this.subscripcion = this.actualizacionusuarioService.obtenerObservable().subscribe(() => {
+      if(!localStorage.getItem('usuarioActual')){
+        this.muestraDatosLogueo = false;
+      }
+      else{
+        this.muestraDatosLogueo = true;
+        this.jugadorActual = JSON.parse(localStorage.getItem('usuarioActual'));
+      }
     });
   }
 
   ngOnInit() {
+  }
+
+  desloguear(){
+    this.muestraDatosLogueo = false;
+    localStorage.clear();
   }
 
   ngOnDestroy() {

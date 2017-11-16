@@ -39,11 +39,12 @@ export class LoginComponent implements OnInit {
     this.HttpService.login(this.rutaAPI, this.loginForm.value.email, this.loginForm.value.password)
     .then(datos => {
       this.spinner = false;
-      if(datos.respuesta == 'Usuario inexistente'){
+      if(datos[0].respuesta == 'Usuario inexistente'){
         this.mensajeError = true;
       }
       else{
-        localStorage.setItem('usuarioActual', JSON.stringify(datos));
+        localStorage.setItem('usuarioActual', JSON.stringify(datos[0]));
+        localStorage.setItem('token', JSON.stringify(datos[1]));
         this.actualizacionusuarioService.actualizarObservable();
         this.router.navigate(['inicial']);
       }
