@@ -10,7 +10,7 @@ import { RutasService } from '../../servicios/rutas.service';
   styleUrls: ['./menu.component.css']
 })
 export class MenuComponent implements OnInit, OnDestroy{
-  jugadorActual: object;
+  jugadorActual: any;
   muestraDetalle: boolean;
   muestraAutor: boolean;
   muestraDatosLogueo: boolean;

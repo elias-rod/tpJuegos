@@ -39,7 +39,7 @@ export class LoginComponent implements OnInit {
     this.HttpService.login(this.rutaAPI, this.loginForm.value.email, this.loginForm.value.password)
     .then(datos => {
       this.spinner = false;
-      if(datos[0].respuesta == 'Usuario inexistente'){
+      if(datos[0].error == 'Usuario inexistente'){
         this.mensajeError = true;
       }
       else{

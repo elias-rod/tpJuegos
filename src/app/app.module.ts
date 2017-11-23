@@ -1,11 +1,10 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { HttpModule } from '@angular/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
-import { HttpModule } from '@angular/http';
-import { AuthModule } from './modulos/auth.module';
 
-import { AppComponent } from './app.component';
+import { AuthModule } from './modulos/auth.module';
 import { RuteoModule } from './modulos/ruteo.module';
 
 import { HttpService } from './servicios/http.service';
@@ -13,6 +12,7 @@ import { ActualizacionusuarioService } from './servicios/actualizacionusuario.se
 import { AuthGuard } from './servicios/auth.guard';
 import { RutasService } from './servicios/rutas.service';
 
+import { AppComponent } from './app.component';
 import { LoginComponent } from './componentes/login/login.component';
 import { MenuComponent } from './componentes/menu/menu.component';
 import { AdivinaNumeroComponent } from './componentes/adivina-numero/adivina-numero.component';
